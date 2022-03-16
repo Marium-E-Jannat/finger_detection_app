@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class PermissionManager {
-    private int requestCode;
+    private final int requestCode;
     private final String TAG;
     private final Context context;
 

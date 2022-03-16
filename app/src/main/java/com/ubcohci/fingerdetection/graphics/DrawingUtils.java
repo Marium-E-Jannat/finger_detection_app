@@ -1,2 +1,5 @@
-package com.ubcohci.fingerdetection.graphics;public class DrawingUtils {
+package com.ubcohci.fingerdetection.graphics;
+
+public class DrawingUtils {
+
 }
