@@ -28,20 +28,20 @@ public class PermissionManager {
 
     public final void getRuntimePermissions() {
         if (context instanceof  ActivityCompat.OnRequestPermissionsResultCallback) {
+            List<String> neededPermissions = new ArrayList<>();
+            for (String ps: getRequiredPermissions()) {
+                if (!isPermissionGranted(ps)) {
+                    neededPermissions.add(ps);
+                }
+            }
+
+            if (neededPermissions.size() > 0) {
+                ActivityCompat.requestPermissions((Activity) this.context, neededPermissions.toArray(new String[0]), requestCode);
+            }
+        } else {
             throw new RuntimeException(String.format(
                     Locale.CANADA,
                     "%s must extends ActivityCompat.OnRequestPermissionsResultCallback.", context.getClass().getSimpleName()));
-        }
-
-        List<String> neededPermissions = new ArrayList<>();
-        for (String ps: getRequiredPermissions()) {
-            if (!isPermissionGranted(ps)) {
-                neededPermissions.add(ps);
-            }
-        }
-
-        if (neededPermissions.size() > 0) {
-            ActivityCompat.requestPermissions((Activity) this.context, neededPermissions.toArray(new String[0]), requestCode);
         }
     }
 
