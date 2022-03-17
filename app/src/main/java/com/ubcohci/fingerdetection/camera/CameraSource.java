@@ -94,6 +94,10 @@ public class CameraSource {
         );
     }
 
+    public void release() {
+        this.cameraExecutor.shutdown();
+    }
+
     public interface AnalyzerListener {
         void handle(@NonNull ImageProxy image);
     }
