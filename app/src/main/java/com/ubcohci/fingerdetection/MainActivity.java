@@ -10,6 +10,7 @@ import androidx.camera.core.ImageProxy;
 import androidx.core.app.ActivityCompat;
 
 import com.ubcohci.fingerdetection.camera.CameraSource;
+import com.ubcohci.fingerdetection.camera.CameraUtils;
 import com.ubcohci.fingerdetection.databinding.ActivityMainBinding;
 import com.ubcohci.fingerdetection.graphics.GraphicOverlay;
 import com.ubcohci.fingerdetection.network.HttpClient;
@@ -20,9 +21,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback,
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity
     // Tags and request codes
     private static final int PERMISSION_REQUESTS = 1;
     private static final String TAG = "MainActivity";
-    private static  final String URL = "https://fdc3-24-71-238-132.ngrok.io" + "/process";
+    private static  final String URL = "https://0722-24-71-238-132.ngrok.io" + "/process";
 
     // View related objects
     public ActivityMainBinding viewBinding;
@@ -90,29 +91,18 @@ public class MainActivity extends AppCompatActivity
         // Save image
         this.image = image;
 
-        // Create a json object
-        JSONObject jsonObj = new JSONObject();
-
         try {
-            JSONArray dimArr = new JSONArray();
-            dimArr.put(image.getWidth());
-            dimArr.put(image.getHeight());
-
-            jsonObj.put("dim", dimArr);
-
-            Log.d(TAG, jsonObj.toString());
-
             // Start sending image
             httpClient.start(
                     URL,
                     "POST",
                     new HashMap<String, String>() {{
-                        put("Content-Type", "application/json");
+                        put("Content-Type", "image/jpeg");
                         put("Accept","application/json");
                     }},
-                    jsonObj.toString()
+                    CameraUtils.imageProxyToByteArray(image)
             );
-        } catch (JSONException | IOException e) {
+        } catch (IOException e) {
             Log.d(TAG, e.getMessage());
             image.close();
         }
@@ -121,7 +111,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResult(Map<String, Object> result) {
         image.close();
-        Log.d(TAG, "Data: " + result.get("data").toString());
+        Log.d(TAG, "Data: " + Objects.requireNonNull(result.get("data")));
     }
 
     @Override

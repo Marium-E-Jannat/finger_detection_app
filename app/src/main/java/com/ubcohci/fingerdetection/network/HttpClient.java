@@ -38,7 +38,7 @@ public class HttpClient {
         this.httpExecutor = Executors.newSingleThreadExecutor();
     }
 
-    public void start(String url, String method, Map<String, String> headers, String data) throws IOException{
+    public void start(String url, String method, Map<String, String> headers, byte[] image) throws IOException{
         // Create a connection
         conn = (HttpsURLConnection) new URL(url).openConnection();
         conn.setRequestMethod(method);
@@ -50,10 +50,10 @@ public class HttpClient {
         if (conn.getRequestMethod().equals("POST")) {
             // Set allowing output
             conn.setDoOutput(true);
-            conn.setChunkedStreamingMode(0);
+//            conn.setChunkedStreamingMode(0);
         }
 
-        if (conn.getRequestMethod().equals("POST") && data == null) {
+        if (conn.getRequestMethod().equals("POST") && image == null) {
             throw new RuntimeException("Request body is NULL for POST!");
         } else if (resultHandler == null) {
             throw new RuntimeException("No handler for the network result!");
@@ -65,7 +65,7 @@ public class HttpClient {
                     // Sending json
                     try  (DataOutputStream os = new DataOutputStream(conn.getOutputStream())) {
                         // Write the data
-                        os.writeBytes(data);
+                        os.write(image);
                         os.flush();
 
                         // Check the response code
