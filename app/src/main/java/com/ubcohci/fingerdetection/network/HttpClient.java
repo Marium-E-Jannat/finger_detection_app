@@ -3,7 +3,11 @@ package com.ubcohci.fingerdetection.network;
 import android.os.Handler;
 import android.os.Looper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,7 +24,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class HttpClient {
 
     public interface ResultHandler {
-        void onResult(Map<String, String> result);
+        void onResult(Map<String, Object> result);
         void onFailure(Exception e);
     }
 
@@ -66,33 +70,29 @@ public class HttpClient {
 
                         // Check the response code
                         if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                            BufferedInputStream in = new BufferedInputStream(conn.getInputStream());
-                            InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8);
+                            BufferedReader reader = new BufferedReader(
+                                    new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
                             StringBuilder out = new StringBuilder();
-                            char[] buffer = new char[1024];
 
-                            int numRead;
-                            do {
-                                numRead = reader.read(buffer, 0, buffer.length);
-                                if (numRead > 0) {
-                                    out.append(buffer);
-                                } else {
-                                    break;
-                                }
-                            } while (true);
+                            int c;
+                            while ((c = reader.read()) != -1) {
+                                out.append((char) c);
+                            }
 
-                            Map<String, String> result = new HashMap<>();
-                            result.put("data", out.toString());
+                            Map<String, Object> result = new HashMap<>();
+                            result.put("data", new JSONObject(out.toString()));
 
                             new Handler(Looper.getMainLooper()).post(
                                     () -> resultHandler.onResult(result)
                             );
+
+                            reader.close();
                         } else {
                             new Handler(Looper.getMainLooper()).post(
                                     () -> resultHandler.onFailure(new RuntimeException("Status code != 200"))
                             );
                         }
-                    } catch (IOException e) {
+                    } catch (IOException | JSONException e) {
                         new Handler(Looper.getMainLooper()).post(
                                 () -> resultHandler.onFailure(e)
                         );
@@ -102,7 +102,6 @@ public class HttpClient {
     }
 
     public void dispose() {
-//        conn.disconnect();
         this.httpExecutor.shutdown();
     }
 }

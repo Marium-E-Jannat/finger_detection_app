@@ -20,6 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity
     // Tags and request codes
     private static final int PERMISSION_REQUESTS = 1;
     private static final String TAG = "MainActivity";
-    private static  final String URL = "https://5111-206-87-0-15.ngrok.io" + "/process";
+    private static  final String URL = "https://fdc3-24-71-238-132.ngrok.io" + "/process";
 
     // View related objects
     public ActivityMainBinding viewBinding;
@@ -118,9 +119,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onResult(Map<String, String> result) {
+    public void onResult(Map<String, Object> result) {
         image.close();
-        Log.d(TAG, "" + result.entrySet().size());
+        Log.d(TAG, "Data: " + result.get("data").toString());
     }
 
     @Override
