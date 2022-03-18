@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat;
 import com.ubcohci.fingerdetection.camera.CameraSource;
 import com.ubcohci.fingerdetection.camera.CameraUtils;
 import com.ubcohci.fingerdetection.databinding.ActivityMainBinding;
+import com.ubcohci.fingerdetection.graphics.DetectionGraphic;
 import com.ubcohci.fingerdetection.graphics.GraphicOverlay;
 import com.ubcohci.fingerdetection.network.HttpClient;
 
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity
     // Tags and request codes
     private static final int PERMISSION_REQUESTS = 1;
     private static final String TAG = "MainActivity";
-    private static  final String URL = "https://0722-24-71-238-132.ngrok.io" + "/process";
+    private static  final String URL = "https://3abd-35-247-116-65.ngrok.io" + "/process";
 
     // View related objects
     public ActivityMainBinding viewBinding;
@@ -111,7 +112,22 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResult(Map<String, Object> result) {
         image.close();
-        Log.d(TAG, "Data: " + Objects.requireNonNull(result.get("data")));
+        JSONObject jsonObject = (JSONObject) Objects.requireNonNull(result.get("data"));
+        Log.d(TAG, "Data: " + jsonObject);
+        // Extract the information
+        try {
+            DetectionGraphic.DetectionInfo info = new DetectionGraphic.DetectionInfo(
+                    jsonObject.getString("class_name"),
+                    String.valueOf(jsonObject.getInt("class_id"))
+            );
+
+            // Draw new things
+            graphicOverlay.clear();
+            graphicOverlay.add(new DetectionGraphic(graphicOverlay, info));
+            graphicOverlay.postInvalidate();
+        } catch (JSONException e) {
+            Log.d(TAG, e.getMessage());
+        }
     }
 
     @Override
