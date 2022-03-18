@@ -133,6 +133,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFailure(Exception e) {
         image.close();
+        graphicOverlay.clear();
+        graphicOverlay.postInvalidate();
         Log.d(TAG, e.getMessage());
     }
 
