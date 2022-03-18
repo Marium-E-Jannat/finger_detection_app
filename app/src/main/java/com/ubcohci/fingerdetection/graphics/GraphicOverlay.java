@@ -86,8 +86,6 @@ public class GraphicOverlay extends View {
             return overlay.getContext().getApplicationContext();
         }
 
-        public Activity getActivity() { return (Activity) overlay.getContext();}
-
         public boolean isImageFlipped() {
             return overlay.isImageFlipped;
         }
