@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity
     // Save the image for closing
     private ImageProxy image;
 
+    // Timer
+    private long startTime = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +94,12 @@ public class MainActivity extends AppCompatActivity
     public void handle(@NonNull ImageProxy image) {
         // Save image
         this.image = image;
+
+        if (startTime > 0 && (System.currentTimeMillis() - startTime) / 1000 < 1) {
+            image.close();
+            return;
+        }
+        startTime = System.currentTimeMillis(); // Set new start time
 
         try {
             // Start sending image
