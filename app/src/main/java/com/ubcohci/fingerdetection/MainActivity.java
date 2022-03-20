@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity
     // Tags and request codes
     private static final int PERMISSION_REQUESTS = 1;
     private static final String TAG = "MainActivity";
-    private static  final String URL = "https://3abd-35-247-116-65.ngrok.io" + "/process";
+    private static  final String URL = "https://7e4f-142-231-76-54.ngrok.io" + "/process";
 
     // View related objects
     public ActivityMainBinding viewBinding;
@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         this.httpClient.dispose();
-        this.cameraSource.release();
         super.onDestroy();
     }
 

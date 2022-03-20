@@ -12,6 +12,7 @@ import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -27,7 +28,6 @@ public class CameraSource {
     private final String TAG;
 
     // Camera settings
-    private final ExecutorService cameraExecutor;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
 
     // Graphics
@@ -46,7 +46,6 @@ public class CameraSource {
     public CameraSource(String tag, GraphicOverlay graphicOverlay, Context context, AnalyzerListener imageHandler) {
         this.TAG = "CameraSource_" + tag;
         this.graphicOverlay = graphicOverlay;
-        this.cameraExecutor = Executors.newSingleThreadExecutor();
         this.context = context;
         this.imageHandler = imageHandler;
     }
@@ -72,7 +71,7 @@ public class CameraSource {
                         // Analyser
                         ImageAnalysis imageAnalysis = new ImageAnalysis.Builder().build();
                         imageAnalysis.setAnalyzer(
-                                this.cameraExecutor,
+                                ContextCompat.getMainExecutor(this.context),
                                 new Analyzer(imageHandler)
                         );
 
@@ -94,10 +93,6 @@ public class CameraSource {
         );
     }
 
-    public void release() {
-        this.cameraExecutor.shutdown();
-    }
-
     public interface AnalyzerListener {
         void handle(@NonNull ImageProxy image);
     }
@@ -112,10 +107,7 @@ public class CameraSource {
         }
         @Override
         public void analyze(@NonNull ImageProxy image) {
-            Handler mainHandler = new Handler(Looper.getMainLooper());
-            mainHandler.post(
-                    () -> listener.handle(image)
-            );
+            listener.handle(image); // Run on current thread (i.e. main thread)
         }
     }
 }
