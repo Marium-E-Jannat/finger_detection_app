@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         this.httpClient.dispose();
+        mDatabase.child("url").removeEventListener(this);
         super.onDestroy();
     }
 
@@ -164,7 +165,7 @@ public class MainActivity extends AppCompatActivity
                     String.valueOf(jsonObject.getInt("class_id"))
             );
 
-            // Draw new things
+            // Draw new overlays with new model results
             graphicOverlay.clear();
             graphicOverlay.add(new DetectionGraphic(graphicOverlay, info));
             graphicOverlay.postInvalidate();
