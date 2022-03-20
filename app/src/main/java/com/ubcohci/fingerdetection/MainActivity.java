@@ -46,10 +46,7 @@ public class MainActivity extends AppCompatActivity
 
     // Http client
     private HttpClient httpClient;
-    private String URL;
-
-    // Save the image for closing
-    private ImageProxy image;
+    private final String URL = "https://07f0-206-87-1-3.ngrok.io" + "/process";
 
     // Timer
     private long startTime = -1;
@@ -67,7 +64,7 @@ public class MainActivity extends AppCompatActivity
 
         // Check for permissions
         permissionManager = new PermissionManager(TAG,this, PERMISSION_REQUESTS);
-        
+
         // TODO: Get the URL from Firebase Database
 
         // Http client
@@ -92,13 +89,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void handle(@NonNull ImageProxy image) {
-        // Save image
-        this.image = image;
-
         if (startTime > 0 && (System.currentTimeMillis() - startTime) / 1000 < 1) {
             image.close();
             return;
         }
+
         startTime = System.currentTimeMillis(); // Set new start time
 
         try {
@@ -114,13 +109,13 @@ public class MainActivity extends AppCompatActivity
             );
         } catch (IOException e) {
             Log.d(TAG, e.getMessage());
-            image.close();
         }
+
+        image.close(); // Close the image
     }
 
     @Override
     public void onResult(Map<String, Object> result) {
-        image.close();
         JSONObject jsonObject = (JSONObject) Objects.requireNonNull(result.get("data"));
         Log.d(TAG, "Data: " + jsonObject);
         // Extract the information
@@ -141,7 +136,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFailure(Exception e) {
-        image.close();
         graphicOverlay.clear();
         graphicOverlay.postInvalidate();
         Log.d(TAG, e.getMessage());
