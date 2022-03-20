@@ -12,23 +12,23 @@ import com.ubcohci.fingerdetection.databinding.ActivityLaunchBinding;
 
 public class LaunchActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ActivityLaunchBinding launchBinding;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Set layout
-        launchBinding = ActivityLaunchBinding.inflate(getLayoutInflater());
+        ActivityLaunchBinding launchBinding = ActivityLaunchBinding.inflate(getLayoutInflater());
         setContentView(launchBinding.getRoot());
 
         // Set listener for the start button
         launchBinding.startButton.setOnClickListener(this);
+
+        FirebaseDatabase.getInstance().getReference();
     }
 
     @Override
     public void onClick(View view) {
         Intent intent = new Intent(this, MainActivity.class);
-        FirebaseDatabase.getInstance().getReference("");
+        startActivity(intent);
     }
 }

@@ -67,9 +67,8 @@ public class MainActivity extends AppCompatActivity
 
         // Check for permissions
         permissionManager = new PermissionManager(TAG,this, PERMISSION_REQUESTS);
-
-        // Get the URL
-        this.URL = getIntent().getStringExtra("url") + "/process";
+        
+        // TODO: Get the URL from Firebase Database
 
         // Http client
         try {
