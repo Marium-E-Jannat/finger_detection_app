@@ -9,6 +9,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.ImageProxy;
 import androidx.core.app.ActivityCompat;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.ubcohci.fingerdetection.camera.CameraSource;
 import com.ubcohci.fingerdetection.camera.CameraUtils;
 import com.ubcohci.fingerdetection.databinding.ActivityMainBinding;
@@ -17,7 +22,6 @@ import com.ubcohci.fingerdetection.graphics.GraphicOverlay;
 import com.ubcohci.fingerdetection.network.HttpClient;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,7 +33,8 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback,
         CameraSource.AnalyzerListener,
-        HttpClient.ResultHandler {
+        HttpClient.ResultHandler,
+        ValueEventListener {
     // Tags and request codes
     private static final int PERMISSION_REQUESTS = 1;
     private static final String TAG = "MainActivity";
@@ -46,7 +51,11 @@ public class MainActivity extends AppCompatActivity
 
     // Http client
     private HttpClient httpClient;
-    private final String URL = "https://07f0-206-87-1-3.ngrok.io" + "/process";
+    private String URL;
+    private static final String suffix = "/process";
+
+    // Firebase Database reference
+    private DatabaseReference mDatabase;
 
     // Timer
     private long startTime = -1;
@@ -65,7 +74,9 @@ public class MainActivity extends AppCompatActivity
         // Check for permissions
         permissionManager = new PermissionManager(TAG,this, PERMISSION_REQUESTS);
 
-        // TODO: Get the URL from Firebase Database
+        // Get a reference to database root
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        initializeServerURL();  // Get the URL to the Google Colab server
 
         // Http client
         try {
@@ -81,6 +92,32 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void initializeServerURL() {
+        if (mDatabase == null) {
+            throw new NullPointerException("Database pointer is null!");
+        }
+        // Add a persistence listener
+        // for the URL field
+        mDatabase.child("url").addValueEventListener(this);
+    }
+
+    @Override
+    public void onDataChange(@NonNull DataSnapshot snapshot) {
+        Object obj = snapshot.getValue();
+
+        if (obj instanceof String) {
+            this.URL = snapshot.getValue() + suffix;
+        } else {
+
+            Log.d(TAG, "Invalid value at " + snapshot.getRef() + " Value: " + obj);
+        }
+    }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError error) {
+        Log.d(TAG, error.getMessage());
+    }
+
     @Override
     protected void onDestroy() {
         this.httpClient.dispose();
@@ -89,7 +126,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void handle(@NonNull ImageProxy image) {
-        if (startTime > 0 && (System.currentTimeMillis() - startTime) / 1000 < 1) {
+        // Checking timing && url availability
+        if ((startTime > 0 && (System.currentTimeMillis() - startTime) / 1000 < 1) || URL == null) {
+            Log.d(TAG, "Timer does not expire yet!");
             image.close();
             return;
         }
