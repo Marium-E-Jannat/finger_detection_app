@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "18724291851",
+    "firebase_url": "https://finger-gesture-default-rtdb.firebaseio.com",
+    "project_id": "finger-gesture",
+    "storage_bucket": "finger-gesture.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:18724291851:android:0848083266d6372f5c0e0e",
+        "android_client_info": {
+          "package_name": "com.ubcohci.fingerdetection"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "18724291851-6b10aio6q4iaeushfu23k7inndncts89.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHobbSk4tUXcI1DV0F_r2eCtsWoh0qQJw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "18724291851-6b10aio6q4iaeushfu23k7inndncts89.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
