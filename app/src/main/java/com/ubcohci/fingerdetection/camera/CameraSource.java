@@ -1,8 +1,6 @@
 package com.ubcohci.fingerdetection.camera;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -17,11 +15,6 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.ubcohci.fingerdetection.MainActivity;
-import com.ubcohci.fingerdetection.graphics.GraphicOverlay;
-
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class CameraSource {
     // TAGs
@@ -30,9 +23,6 @@ public class CameraSource {
     // Camera settings
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
 
-    // Graphics
-    public final GraphicOverlay graphicOverlay;
-
     // Owner
     private final Context context;
     private final AnalyzerListener imageHandler;
@@ -40,12 +30,10 @@ public class CameraSource {
     /**
      * Constructor
      * @param tag TAG of the owner.
-     * @param graphicOverlay The view to draw detection rectangles.
      * @param context The owner (must be instance of LifecycleOwner)
      */
-    public CameraSource(String tag, GraphicOverlay graphicOverlay, Context context, AnalyzerListener imageHandler) {
+    public CameraSource(String tag, Context context, AnalyzerListener imageHandler) {
         this.TAG = "CameraSource_" + tag;
-        this.graphicOverlay = graphicOverlay;
         this.context = context;
         this.imageHandler = imageHandler;
     }

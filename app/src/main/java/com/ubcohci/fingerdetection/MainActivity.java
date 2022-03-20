@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity
     // Tags and request codes
     private static final int PERMISSION_REQUESTS = 1;
     private static final String TAG = "MainActivity";
-    private static  final String URL = "https://7e4f-142-231-76-54.ngrok.io" + "/process";
 
     // View related objects
     public ActivityMainBinding viewBinding;
@@ -47,6 +46,7 @@ public class MainActivity extends AppCompatActivity
 
     // Http client
     private HttpClient httpClient;
+    private String URL;
 
     // Save the image for closing
     private ImageProxy image;
@@ -61,13 +61,15 @@ public class MainActivity extends AppCompatActivity
         viewBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(viewBinding.getRoot());
 
-
         // Get the graphic overlay
         graphicOverlay = viewBinding.graphicOverlay;
-        cameraSource = new CameraSource(TAG, graphicOverlay, this, this);
+        cameraSource = new CameraSource(TAG,this, this);
 
         // Check for permissions
         permissionManager = new PermissionManager(TAG,this, PERMISSION_REQUESTS);
+
+        // Get the URL
+        this.URL = getIntent().getStringExtra("url") + "/process";
 
         // Http client
         try {
