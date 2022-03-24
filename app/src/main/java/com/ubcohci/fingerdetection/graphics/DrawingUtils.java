@@ -89,4 +89,8 @@ public class DrawingUtils {
         );
         canvas.restore();
     }
+
+    public static void drawInferenceResult(@NonNull Canvas canvas, @NonNull InferenceGraphic.Inference inference) {
+        
+    }
 }
