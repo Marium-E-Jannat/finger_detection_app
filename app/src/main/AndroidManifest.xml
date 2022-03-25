@@ -16,7 +16,9 @@
         <activity
             android:name=".MainActivity">
         </activity>
-
+        <activity
+            android:name=".application.VideoControlActivity">
+        </activity>
         <activity
             android:name=".LaunchActivity"
             android:exported="true">
