@@ -19,6 +19,7 @@ import com.ubcohci.fingerdetection.camera.CameraUtils;
 import com.ubcohci.fingerdetection.databinding.ActivityMainBinding;
 import com.ubcohci.fingerdetection.graphics.DetectionGraphic;
 import com.ubcohci.fingerdetection.graphics.GraphicOverlay;
+import com.ubcohci.fingerdetection.graphics.InferenceGraphic;
 import com.ubcohci.fingerdetection.network.HttpClient;
 
 import org.jetbrains.annotations.NotNull;
@@ -57,8 +58,12 @@ public class MainActivity extends AppCompatActivity
     // Firebase Database reference
     private DatabaseReference mDatabase;
 
-    // Timer
-    private long startTime = -1;
+    // Reference to the current frame
+    private ImageProxy currentFrame;
+
+    // A latency tracker
+    private InferenceTracker inferenceTracker;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +78,9 @@ public class MainActivity extends AppCompatActivity
 
         // Check for permissions
         permissionManager = new PermissionManager(TAG,this, PERMISSION_REQUESTS);
+
+        // Get the inference tracker
+        inferenceTracker = new InferenceTracker();
 
         // Get a reference to database root
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -127,16 +135,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void handle(@NonNull ImageProxy image) {
-        // Checking timing && url availability
-        if ((startTime > 0 && (System.currentTimeMillis() - startTime) / 1000 < 1) || URL == null) {
-            Log.d(TAG, "Timer does not expire yet!");
-            image.close();
-            return;
-        }
-
-        startTime = System.currentTimeMillis(); // Set new start time
-
+        this.currentFrame = image;
         try {
+            this.inferenceTracker.setStartTime(); // Set timer
             // Start sending image
             httpClient.start(
                     URL,
@@ -156,22 +157,38 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onResult(Map<String, Object> result) {
+        inferenceTracker.setStopTime(); // Stop timer
+
         JSONObject jsonObject = (JSONObject) Objects.requireNonNull(result.get("data"));
         Log.d(TAG, "Data: " + jsonObject);
+
         // Extract the information
         try {
+            // Get detection information
             DetectionGraphic.DetectionInfo info = new DetectionGraphic.DetectionInfo(
                     jsonObject.getString("class_name"),
                     String.valueOf(jsonObject.getInt("class_id"))
             );
 
-            // Draw new overlays with new model results
+            // Clear all graphics
             graphicOverlay.clear();
+
+            // Draw new overlays with new model results
             graphicOverlay.add(new DetectionGraphic(graphicOverlay, info));
+
+            // Draw new overlays with latency information
+            graphicOverlay.add(new InferenceGraphic(graphicOverlay, new InferenceGraphic.Inference(
+                this.inferenceTracker.getLatency(), new int[] { this.currentFrame.getWidth(), this.currentFrame.getHeight()}
+            )));
+
+            // Notify graphicOverlay that it needs to redraw
             graphicOverlay.postInvalidate();
         } catch (JSONException e) {
             Log.d(TAG, e.getMessage());
         }
+
+        // Release the current frame
+        this.currentFrame.close();
     }
 
     @Override
