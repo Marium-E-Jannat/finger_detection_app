@@ -15,6 +15,7 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.ubcohci.fingerdetection.MainActivity;
+import com.ubcohci.fingerdetection.application.VideoControlActivity;
 
 public class CameraSource {
     // TAGs
@@ -51,7 +52,7 @@ public class CameraSource {
 
                         // Preview
                         Preview preview = new Preview.Builder().build();
-                        preview.setSurfaceProvider(((MainActivity) context).viewBinding.viewFinder.getSurfaceProvider());
+                        preview.setSurfaceProvider(getSurfaceProvider(this.context));
 
                         // Camera selector
                         CameraSelector selector = CameraSelector.DEFAULT_FRONT_CAMERA;
@@ -79,6 +80,14 @@ public class CameraSource {
                 },
                 ActivityCompat.getMainExecutor(this.context) // Running on the main thread
         );
+    }
+
+    private Preview.SurfaceProvider getSurfaceProvider(Context context) {
+        Preview.SurfaceProvider surfaceProvider = null;
+        if (context instanceof MainActivity) {
+            surfaceProvider = ((MainActivity) context).viewBinding.viewFinder.getSurfaceProvider();
+        }
+        return surfaceProvider;
     }
 
     public interface AnalyzerListener {
