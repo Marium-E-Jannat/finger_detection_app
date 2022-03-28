@@ -194,7 +194,7 @@ public class BaseActivity extends AppCompatActivity
         this.currentFrame.close();
     }
 
-    protected void handleAppTask(JSONObject data) {}
+    protected void handleAppTask(JSONObject data) throws JSONException {}
 
     @Override
     public void onFailure(Exception e) {
