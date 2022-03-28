@@ -150,9 +150,8 @@ public class MainActivity extends AppCompatActivity
             );
         } catch (IOException e) {
             Log.d(TAG, e.getMessage());
+            image.close(); // Close the image
         }
-
-        image.close(); // Close the image
     }
 
     @Override
