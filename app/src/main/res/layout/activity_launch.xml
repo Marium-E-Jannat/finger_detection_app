@@ -67,6 +67,7 @@
             android:layout_weight="1"
             android:gravity="center|start"
             android:text="@string/app_selection"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <Spinner
@@ -98,14 +99,19 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/show_debug"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <CheckBox
             android:id="@+id/debug_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:gravity="center" />
+            android:layout_weight="0" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="6" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
