@@ -11,6 +11,7 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragmentX;
 import com.google.android.youtube.player.YouTubePlayerView;
 import com.ubcohci.fingerdetection.BuildConfig;
+import com.ubcohci.fingerdetection.GestureDetector;
 import com.ubcohci.fingerdetection.databinding.ActivityVideoControlBinding;
 
 import org.json.JSONException;
@@ -30,21 +31,11 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
     // Video player
     private YouTubePlayer player;
 
-    // A mapping from detection class to volume level
-    private static final Map<String, Integer> postureToVolume = new HashMap<>();
-
     // A tracker of the current volume level
     private int currentLevel = -1;
 
-    static  {
-        //Straight index finger to set the sound at 10x
-        postureToVolume.put("straight_index", 10);
-        //Straight two fingers to set the sound at 20x
-        postureToVolume.put("straight_two", 20);
-        //Straight all fingers to set the sound at 30x
-        postureToVolume.put("straight_all", 30);
-    }
-
+    // A gesture detector
+    private GestureDetector gestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +46,9 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
 
         // Set graphic overlay
         this.graphicOverlay = viewBinding.videoGraphicOverlay;
+
+        // Init a gesture detector
+        gestureDetector = new GestureDetector();
 
         // Init youtube API
         initYoutubeAPI();
@@ -113,7 +107,7 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
 
         super.handleAppTask(data);
         // Get class name
-        Integer volumeLevel = postureToVolume.get(data.getString("class_name"));
+        Integer volumeLevel = gestureDetector.findVolumeLevel(data.getString("class_name"));
 
         // If the posture is not found or the same posture is detected
         if (volumeLevel == null || currentLevel == volumeLevel) {
