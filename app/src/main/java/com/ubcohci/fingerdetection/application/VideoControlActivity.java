@@ -79,6 +79,14 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (player != null) {
+            this.player.release();
+        }
+    }
+
+    @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
         Log.d(TAG, "Video player is initialized!");
         // Get a hold of the youtube player
@@ -99,7 +107,7 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
     protected void handleAppTask(JSONObject data) throws JSONException {
         // Skip and wait when youtube API is not initialized
         // or when the video is paused
-        if (this.player == null || !this.player.isPlaying()) {
+        if (this.player == null || this.isFinishing() || !this.player.isPlaying()) {
             return;
         }
 
