@@ -22,6 +22,7 @@
             android:name=".MainActivity">
         </activity>
         <activity
+            android:hardwareAccelerated="true"
             android:name=".application.VideoControlActivity">
         </activity>
         <activity
