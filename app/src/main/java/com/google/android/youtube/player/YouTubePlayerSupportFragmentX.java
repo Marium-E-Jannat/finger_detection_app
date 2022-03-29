@@ -52,7 +52,6 @@ public class YouTubePlayerSupportFragmentX extends Fragment implements YouTubePl
     @Override
     public View onCreateView(@NonNull LayoutInflater var1, ViewGroup var2, Bundle var3) {
         this.c = new YouTubePlayerView(this.getActivity(), (AttributeSet)null, 0, this.a);
-        c.setId(VideoControlActivity.youtubeViewId);
         this.a();
         return this.c;
     }
