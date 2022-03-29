@@ -79,12 +79,20 @@ public class CameraSource {
                         cameraProvider.unbindAll();
 
                         // Bind use cases
-                        cameraProvider.bindToLifecycle(
-                                (LifecycleOwner) this.context,
-                                selector,
-                                preview,
-                                imageAnalysis
-                        );
+                        if (preview == null) {
+                            cameraProvider.bindToLifecycle(
+                                    (LifecycleOwner) this.context,
+                                    selector,
+                                    imageAnalysis
+                            );
+                        } else {
+                            cameraProvider.bindToLifecycle(
+                                    (LifecycleOwner) this.context,
+                                    selector,
+                                    preview,
+                                    imageAnalysis
+                            );
+                        }
                     } catch (Exception e) {
                         Log.e(TAG, e.getMessage());
                     }
