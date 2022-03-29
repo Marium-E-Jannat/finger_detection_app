@@ -56,7 +56,8 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
         // Set graphic overlay
         this.graphicOverlay = viewBinding.videoGraphicOverlay;
 
-
+        // Init youtube API
+        initYoutubeAPI();
 
         // Start camera
         if (permissionManager.isAllPermissionsGranted()) {
