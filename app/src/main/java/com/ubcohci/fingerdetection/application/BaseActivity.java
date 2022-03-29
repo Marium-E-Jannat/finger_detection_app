@@ -92,12 +92,6 @@ public class BaseActivity extends AppCompatActivity
         } catch (Exception e) {
             Toast.makeText(this, "Http connection is not initialized", Toast.LENGTH_SHORT).show();
         }
-
-        if (permissionManager.isAllPermissionsGranted()) {
-            cameraSource.startCamera();
-        } else {
-            permissionManager.getRuntimePermissions();
-        }
     }
 
     public void initializeServerURL() {
