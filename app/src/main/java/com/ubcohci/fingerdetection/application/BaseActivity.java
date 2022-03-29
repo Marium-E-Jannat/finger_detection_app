@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.ImageProxy;
@@ -107,8 +106,8 @@ public class BaseActivity extends AppCompatActivity
     public void onDataChange(@NonNull DataSnapshot snapshot) {
         Object obj = snapshot.getValue();
 
-        if (obj instanceof String) {
-            this.URL = snapshot.getValue() + suffix;
+        if (obj instanceof String && HttpClient.isHttps((String) obj)) {
+            this.URL = (String)obj + suffix;
         } else {
             Log.d(TAG, "Invalid value at " + snapshot.getRef() + " Value: " + obj);
         }

@@ -6,7 +6,6 @@ import android.os.Looper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -18,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -103,5 +103,10 @@ public class HttpClient {
 
     public void dispose() {
         this.httpExecutor.shutdown();
+    }
+
+    public static boolean isHttps(String url) {
+        Pattern pattern = Pattern.compile("^https://");
+        return pattern.matcher(url).find();
     }
 }
