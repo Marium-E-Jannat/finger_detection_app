@@ -92,7 +92,9 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
 
     @Override
     protected void handleAppTask(JSONObject data) throws JSONException {
-        if (this.player == null) { // Skip and wait till youtube API is initialized
+        // Skip and wait when youtube API is not initialized
+        // or when the video is paused
+        if (this.player == null || !this.player.isPlaying()) {
             return;
         }
 
@@ -100,6 +102,7 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
         // Get class name
         Integer volumeLevel = postureToVolume.get(data.getString("class_name"));
 
+        // If the posture is not found or the same posture is detected
         if (volumeLevel == null || currentLevel == volumeLevel) {
             Log.d(TAG, "Volume remains the same!");
             return;
