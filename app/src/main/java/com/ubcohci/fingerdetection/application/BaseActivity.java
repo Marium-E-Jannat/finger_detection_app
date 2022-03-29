@@ -124,6 +124,7 @@ public class BaseActivity extends AppCompatActivity
         this.httpClient.dispose();
         mDatabase.child("url").removeEventListener(this);
         super.onDestroy();
+        cameraSource.release();
     }
 
     @Override

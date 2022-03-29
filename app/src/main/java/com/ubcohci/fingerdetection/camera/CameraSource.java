@@ -17,6 +17,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.ubcohci.fingerdetection.MainActivity;
 import com.ubcohci.fingerdetection.application.VideoControlActivity;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class CameraSource {
     // TAGs
     private final String TAG;
@@ -28,6 +31,8 @@ public class CameraSource {
     private final Context context;
     private final AnalyzerListener imageHandler;
 
+    private final ExecutorService cameraExecutor;
+
     /**
      * Constructor
      * @param tag TAG of the owner.
@@ -37,6 +42,7 @@ public class CameraSource {
         this.TAG = "CameraSource_" + tag;
         this.context = context;
         this.imageHandler = imageHandler;
+        this.cameraExecutor = Executors.newSingleThreadExecutor();
     }
 
     /**
@@ -60,7 +66,7 @@ public class CameraSource {
                         // Analyser
                         ImageAnalysis imageAnalysis = new ImageAnalysis.Builder().build();
                         imageAnalysis.setAnalyzer(
-                                ContextCompat.getMainExecutor(this.context),
+                                cameraExecutor,
                                 new Analyzer(imageHandler)
                         );
 
@@ -80,6 +86,10 @@ public class CameraSource {
                 },
                 ActivityCompat.getMainExecutor(this.context) // Running on the main thread
         );
+    }
+
+    public void release() {
+        this.cameraExecutor.shutdown();
     }
 
     private Preview.SurfaceProvider getSurfaceProvider(Context context) {
