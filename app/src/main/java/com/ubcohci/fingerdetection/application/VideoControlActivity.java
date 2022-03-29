@@ -56,6 +56,17 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
         // Set graphic overlay
         this.graphicOverlay = viewBinding.videoGraphicOverlay;
 
+
+
+        // Start camera
+        if (permissionManager.isAllPermissionsGranted()) {
+            cameraSource.startCamera();
+        } else {
+            permissionManager.getRuntimePermissions();
+        }
+    }
+
+    public void initYoutubeAPI() {
         // Initialize youtube API
         YouTubePlayerSupportFragmentX youtubeFragment = ((YouTubePlayerSupportFragmentX) getSupportFragmentManager().findFragmentById(viewBinding.ytPlayer.getId()));
         if (youtubeFragment != null) {
@@ -63,13 +74,6 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
         } else {
             Log.d(TAG, "No youtube fragment available!");
             this.finish();
-        }
-
-        // Start camera
-        if (permissionManager.isAllPermissionsGranted()) {
-            cameraSource.startCamera();
-        } else {
-            permissionManager.getRuntimePermissions();
         }
     }
 

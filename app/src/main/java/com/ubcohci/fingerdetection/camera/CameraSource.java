@@ -57,8 +57,13 @@ public class CameraSource {
                         ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
 
                         // Preview
-                        Preview preview = new Preview.Builder().build();
-                        preview.setSurfaceProvider(getSurfaceProvider(this.context));
+                        Preview preview =  null;
+                        Preview.SurfaceProvider surfaceProvider = getSurfaceProvider(this.context);
+                        if (surfaceProvider != null) {
+                            preview = new Preview.Builder().build();
+                            preview.setSurfaceProvider(surfaceProvider);
+                        }
+
 
                         // Camera selector
                         CameraSelector selector = CameraSelector.DEFAULT_FRONT_CAMERA;
@@ -114,7 +119,7 @@ public class CameraSource {
         }
         @Override
         public void analyze(@NonNull ImageProxy image) {
-            listener.handle(image); // Run on current thread (i.e. main thread)
+            listener.handle(image); // Run a separate thread pool (cameraExecutor)
         }
     }
 }
