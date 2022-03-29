@@ -107,29 +107,44 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
 
         super.handleAppTask(data);
         // Get class name
-        Integer volumeLevel = gestureDetector.findVolumeLevel(data.getString("class_name"));
+        String className = data.getString("class_name");
 
-        // If the posture is not found or the same posture is detected
-        if (volumeLevel == null || currentLevel == volumeLevel) {
-            Log.d(TAG, "Volume remains the same!");
-            return;
+        // Get the task to perform based on posture
+        switch (gestureDetector.getPostureTask(className)) {
+            case SWITCH_VOLUME:
+                Integer volumeLevel = gestureDetector.findVolumeLevel(className);
+                // If the posture is not found or the same posture is detected
+                if (volumeLevel == null || currentLevel == volumeLevel) {
+                    Log.d(TAG, "Volume remains the same!");
+                    return;
+                }
+                switchVolume(volumeLevel);
+                this.currentLevel = volumeLevel;
+                break;
+            case SWITCH_VIDEO:
+                switchVideo(className.equals(gestureDetector.getPostureName(3)));
+                break;
         }
+    }
 
-        this.currentLevel = volumeLevel;
-
+    public void switchVolume(int volumeLevel) {
         Log.d(TAG, "Setting volume to " + volumeLevel);
 
         // Use audio service to change volume
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-       if (audioManager.isVolumeFixed()) {
-           Toast.makeText(this, "Volume is in fixed mode!", Toast.LENGTH_SHORT).show();
-       } else {
-           audioManager.setStreamVolume(
-                   AudioManager.STREAM_MUSIC,
-                   volumeLevel,
-                   AudioManager.FLAG_SHOW_UI
-           );
-       }
+        if (audioManager.isVolumeFixed()) {
+            Toast.makeText(this, "Volume is in fixed mode!", Toast.LENGTH_SHORT).show();
+        } else {
+            audioManager.setStreamVolume(
+                    AudioManager.STREAM_MUSIC,
+                    volumeLevel,
+                    AudioManager.FLAG_SHOW_UI
+            );
+        }
+    }
+
+    public void switchVideo(boolean next) {
+        this.player.loadVideo(next? gestureDetector.getNextHash(): gestureDetector.getPreviousHash());
     }
 }
