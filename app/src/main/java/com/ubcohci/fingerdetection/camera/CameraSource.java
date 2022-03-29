@@ -31,8 +31,6 @@ public class CameraSource {
     private final Context context;
     private final AnalyzerListener imageHandler;
 
-    private final ExecutorService cameraExecutor;
-
     /**
      * Constructor
      * @param tag TAG of the owner.
@@ -42,7 +40,6 @@ public class CameraSource {
         this.TAG = "CameraSource_" + tag;
         this.context = context;
         this.imageHandler = imageHandler;
-        this.cameraExecutor = Executors.newSingleThreadExecutor();
     }
 
     /**
@@ -71,7 +68,7 @@ public class CameraSource {
                         // Analyser
                         ImageAnalysis imageAnalysis = new ImageAnalysis.Builder().build();
                         imageAnalysis.setAnalyzer(
-                                cameraExecutor,
+                                ActivityCompat.getMainExecutor(this.context),
                                 new Analyzer(imageHandler)
                         );
 
@@ -101,9 +98,7 @@ public class CameraSource {
         );
     }
 
-    public void release() {
-        this.cameraExecutor.shutdown();
-    }
+    public void release() { }
 
     private Preview.SurfaceProvider getSurfaceProvider(Context context) {
         Preview.SurfaceProvider surfaceProvider = null;
