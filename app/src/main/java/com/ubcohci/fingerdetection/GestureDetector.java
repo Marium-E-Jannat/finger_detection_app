@@ -34,12 +34,6 @@ public class GestureDetector {
             "all_palm"
     };
 
-    // A mapping from detection class to volume level
-    private static final Map<String, Integer> postureToVolume = new HashMap<>();
-
-    // A buffer to check for a gesture
-    private final List<String> gestureBuffer = new ArrayList<>();
-
     // A list of possible videos to switch between
     private static final String[] videoHashes = new String[] {
             "HzeK7g8cD0Y",
@@ -47,9 +41,37 @@ public class GestureDetector {
             "-QuVe-hjMs0"
     };
 
+    // A mapping from posture to volume level
+    private static final Map<String, Integer> postureToVolume = new HashMap<>();
+
+    // A mapping from gestures to volume level
+    private static final Map<String, Integer> gestureToBrightness = new HashMap<>();
+
+    // A list of possible sequences of postures
+    private static final List<String[]> gestures = new ArrayList<>();
+
     // Internal track for the current video
     private int currentIndex = -1;
 
+    // A buffer to check for a gesture
+    private final List<String> gestureBuffer = new ArrayList<>();
+
+    // A integer representing max time-out
+    // This is updated on based on newly calculated latency
+    private int maxTimeout;
+
+    // Representing the time marker for last detected posture.
+    private long lastDetectTime;
+
+    // A flag to check if timeOut situation is reached!
+    private boolean isTimeout;
+
+    /**
+     * Constructor
+     */
+    public GestureDetector() {}
+
+    // Static initializer
     static {
         //Straight index finger to set the sound at 10x
         postureToVolume.put(postures[0], 10);
