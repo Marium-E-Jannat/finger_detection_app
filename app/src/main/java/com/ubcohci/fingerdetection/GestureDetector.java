@@ -49,8 +49,8 @@ public class GestureDetector {
         //Straight all fingers to set the sound at 30x
         postureToVolume.put(postures[2], 30);
 
-        // V to switch to next video
-        // Hook to switch to previous video
+        // V to switch to next video --> Use getNextHash()
+        // Hook to switch to previous video --> Use getPreviousHash()
 
 
         // Single finger, then two fingers to increase the volume
@@ -75,6 +75,13 @@ public class GestureDetector {
 
     public Integer findVolumeLevel(String posture) {
         return posture == null? null: postureToVolume.get(posture);
+    }
+
+    public boolean isNextHash(String className) {
+        return className.equals(getPostureName(3));
+    }
+    public String getAnotherHash(String className) {
+        return isNextHash(className)? getNextHash(): getPreviousHash();
     }
 
     public String getNextHash() {

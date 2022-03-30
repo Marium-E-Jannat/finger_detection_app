@@ -9,16 +9,12 @@ import android.widget.Toast;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragmentX;
-import com.google.android.youtube.player.YouTubePlayerView;
 import com.ubcohci.fingerdetection.BuildConfig;
 import com.ubcohci.fingerdetection.GestureDetector;
 import com.ubcohci.fingerdetection.databinding.ActivityVideoControlBinding;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class VideoControlActivity extends BaseActivity implements YouTubePlayer.OnInitializedListener {
 
@@ -122,7 +118,7 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
                 this.currentLevel = volumeLevel;
                 break;
             case SWITCH_VIDEO:
-                switchVideo(className.equals(gestureDetector.getPostureName(3)));
+                switchVideo(gestureDetector.getAnotherHash(className));
                 break;
             default: // Do nothing if there is no posture detected
         }
@@ -145,7 +141,7 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
         }
     }
 
-    public void switchVideo(boolean next) {
-        this.player.loadVideo(next? gestureDetector.getNextHash(): gestureDetector.getPreviousHash());
+    public void switchVideo(String newHash) {
+        this.player.loadVideo(newHash);
     }
 }
