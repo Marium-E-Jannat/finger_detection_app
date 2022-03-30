@@ -9,7 +9,8 @@ public class GestureDetector {
 
     public enum PostureTask {
         SWITCH_VOLUME,
-        SWITCH_VIDEO
+        SWITCH_VIDEO,
+        NONE
     }
 
     // A list of all possible postures
@@ -65,8 +66,10 @@ public class GestureDetector {
     public PostureTask getPostureTask(String posture) {
         if (posture.equals(postures[3]) || posture.equals(postures[4])) {
             return PostureTask.SWITCH_VIDEO;
-        } else {
+        } else if (posture.equals(postures[0]) || posture.equals(postures[1]) || posture.equals(postures[2])) {
             return PostureTask.SWITCH_VOLUME;
+        } else {
+            return PostureTask.NONE;
         }
     }
 

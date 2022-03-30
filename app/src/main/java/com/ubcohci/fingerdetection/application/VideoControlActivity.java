@@ -124,6 +124,7 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
             case SWITCH_VIDEO:
                 switchVideo(className.equals(gestureDetector.getPostureName(3)));
                 break;
+            default: // Do nothing if there is no posture detected
         }
     }
 
