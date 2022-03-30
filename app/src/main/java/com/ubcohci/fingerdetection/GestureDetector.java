@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class GestureDetector {
@@ -90,10 +91,10 @@ public class GestureDetector {
 
         // One finger - one finger – one finger – brightness level 10
         gestures.add(new String[] {postures[0], postures[0], postures[0]});
-        gestureToBrightness.put(postures[0] + postures[0]+  postures[0], 10);
+        gestureToBrightness.put(String.format(Locale.CANADA, "%s_%s_%s", postures[0], postures[0], postures[0]), 10);
         // One finger - one finger – two fingers – brightness level 20
         gestures.add(new String[] {postures[0],postures[0], postures[1]});
-        gestureToBrightness.put(postures[0] + postures[0]+  postures[1], 20);
+        gestureToBrightness.put(String.format(Locale.CANADA, "%s_%s_%s", postures[0], postures[0], postures[1]), 20);
     }
 
     /**
