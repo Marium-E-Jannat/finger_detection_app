@@ -54,18 +54,25 @@ public class GestureDetector {
         // V to switch to next video --> Use getNextHash()
         // Hook to switch to previous video --> Use getPreviousHash()
 
-
         // Single finger, then two fingers to increase the volume
+        gestures.add(new String[] {postures[0], postures[1]});
         // Two fingers, then a single finger to decrease the volume
+        gestures.add(new String[] {postures[1], postures[0]});
 
         // One finger - one finger – one finger – brightness level 10
+        gestures.add(new String[] {postures[0], postures[0], postures[0]});
+        gestureToBrightness.put(postures[0] + postures[0]+  postures[0], 10);
         // One finger - one finger – two fingers – brightness level 20
-
+        gestures.add(new String[] {postures[0],postures[0], postures[1]});
+        gestureToBrightness.put(postures[0] + postures[0]+  postures[1], 20);
     }
 
-    public GestureDetector() {}
-
-    public PostureTask getPostureTask(@NonNull String posture) {
+    /**
+     * Get the task to perform based on the current posture.
+     * @param posture The class name of the current posture.
+     * @return A enum representing a task.
+     */
+    public PostureTask getMotionTask(@NonNull String posture) {
         if (posture.equals(postures[3]) || posture.equals(postures[4])) {
             return PostureTask.SWITCH_VIDEO;
         } else if (posture.equals(postures[0]) || posture.equals(postures[1]) || posture.equals(postures[2])) {

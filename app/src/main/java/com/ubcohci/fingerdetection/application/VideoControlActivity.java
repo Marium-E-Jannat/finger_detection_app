@@ -108,7 +108,7 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
         String className = data.getString("class_name");
 
         // Get the task to perform based on posture
-        switch (gestureDetector.getPostureTask(className)) {
+        switch (gestureDetector.getMotionTask(className)) {
             case SWITCH_VOLUME:
                 Integer volumeLevel = gestureDetector.findVolumeLevel(className);
                 // If the posture is not found or the same posture is detected
