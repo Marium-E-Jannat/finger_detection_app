@@ -8,10 +8,17 @@ import java.util.List;
 import java.util.Map;
 
 public class GestureDetector {
+    // An enum defining whether the current posture
+    // is a stand-alone or part of a gesture.
+    public enum MotionType {POSTURE, GESTURE, WAITING}
 
+    // An enum define all possible task for each detection result
     public enum PostureTask {
         SWITCH_VOLUME,
         SWITCH_VIDEO,
+        SWITCH_BRIGHTNESS,
+        ADJUST_VOLUME_DOWN,
+        ADJUST_VOLUME_UP,
         NONE
     }
 
