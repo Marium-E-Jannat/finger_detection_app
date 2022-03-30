@@ -12,6 +12,9 @@ public class InferenceTracker {
     // Keep a queue of latency
     private final Queue<Long> queue;
 
+    // Keep a tracked sum of latency
+    private long latencySum = 0;
+
     // Max size of queue
     private final static int queueSize = 10;
 
@@ -23,14 +26,15 @@ public class InferenceTracker {
     }
 
     public void addNewLatency(long latency) {
-        if (queue.size() == queueSize) {
-            queue.remove(); // Remove the first element
-        }
+        latencySum += latency;
         queue.add(latency);
+        if (queue.size() == queueSize) {
+            latencySum -= queue.remove(); // Remove the first element
+        }
     }
 
     public long getLatency() {
-        return getQueueSum(this.queue) / Math.max(1, this.queue.size());
+        return latencySum / Math.max(1, this.queue.size());
     }
 
     public void setStartTime() {
@@ -41,13 +45,5 @@ public class InferenceTracker {
         // Keep a marker for stop time
         long stopTime = System.currentTimeMillis();
         addNewLatency(stopTime - this.startTime);
-    }
-
-    private static long getQueueSum(Queue<Long> queue) {
-        long sum = 0;
-        for (Long integer: queue) {
-            sum += integer;
-        }
-        return sum;
     }
 }
