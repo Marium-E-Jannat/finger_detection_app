@@ -1,5 +1,7 @@
 package com.ubcohci.fingerdetection;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +65,7 @@ public class GestureDetector {
 
     public GestureDetector() {}
 
-    public PostureTask getPostureTask(String posture) {
+    public PostureTask getPostureTask(@NonNull String posture) {
         if (posture.equals(postures[3]) || posture.equals(postures[4])) {
             return PostureTask.SWITCH_VIDEO;
         } else if (posture.equals(postures[0]) || posture.equals(postures[1]) || posture.equals(postures[2])) {
@@ -73,14 +75,15 @@ public class GestureDetector {
         }
     }
 
-    public Integer findVolumeLevel(String posture) {
-        return posture == null? null: postureToVolume.get(posture);
+    public Integer findVolumeLevel(@NonNull String posture) {
+        return postureToVolume.get(posture);
     }
 
-    public boolean isNextHash(String className) {
+    public boolean isNextHash(@NonNull String className) {
         return className.equals(getPostureName(3));
     }
-    public String getAnotherHash(String className) {
+
+    public String getAnotherHash(@NonNull String className) {
         return isNextHash(className)? getNextHash(): getPreviousHash();
     }
 

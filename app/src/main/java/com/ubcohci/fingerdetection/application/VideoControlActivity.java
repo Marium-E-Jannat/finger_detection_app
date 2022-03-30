@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragmentX;
@@ -141,7 +143,7 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
         }
     }
 
-    public void switchVideo(String newHash) {
+    public void switchVideo(@NonNull String newHash) {
         this.player.loadVideo(newHash);
     }
 }
