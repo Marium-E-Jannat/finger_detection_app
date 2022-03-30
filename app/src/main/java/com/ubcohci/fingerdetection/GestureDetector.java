@@ -111,32 +111,47 @@ public class GestureDetector {
         }
     }
 
+    /**
+     * Find the volume level for the current posture.
+     * @param posture The posture's class name
+     * @return Volume level
+     */
     public Integer findVolumeLevel(@NonNull String posture) {
         return postureToVolume.get(posture);
     }
 
-    public boolean isNextHash(@NonNull String className) {
+    /**
+     * Get the next video's hash based on the class name.
+     * @param posture The class name of the current posture.
+     * @return The hash for the corresponding video.
+     */
+    public String getAnotherHash(@NonNull String posture) {
+        return isNextHash(posture)? getNextHash(): getPreviousHash();
+    }
+
+    /**
+     * Get the posture's class name at the current index.
+     * @param index The index of the posture
+     * @return The posture's class name
+     */
+    public String getPostureName(int index) {
+        return index > postures.length - 1? null: postures[index];
+    }
+
+    private boolean isNextHash(@NonNull String className) {
         return className.equals(getPostureName(3));
     }
 
-    public String getAnotherHash(@NonNull String className) {
-        return isNextHash(className)? getNextHash(): getPreviousHash();
-    }
-
-    public String getNextHash() {
+    private String getNextHash() {
         currentIndex = (currentIndex + 1) % videoHashes.length;
         return videoHashes[currentIndex];
     }
 
-    public String getPreviousHash() {
+    private String getPreviousHash() {
         currentIndex--; // Decrement counter
         if (currentIndex < 0) {
             currentIndex = videoHashes.length - 1;
         }
         return videoHashes[currentIndex];
-    }
-
-    public String getPostureName(int index) {
-        return index > postures.length - 1? null: postures[index];
     }
 }
