@@ -156,4 +156,15 @@ public class GestureDetector {
         }
         return videoHashes[currentIndex];
     }
+
+    private boolean isPostureExist(String posture) {
+        if (posture != null) {
+            for (String _posture: postures) {
+                if (posture.equals(_posture)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
