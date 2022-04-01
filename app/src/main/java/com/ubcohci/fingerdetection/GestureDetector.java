@@ -11,7 +11,7 @@ import java.util.Map;
 public class GestureDetector {
 
     // An enum define all possible task for each detection result
-    public enum PostureTask {
+    public enum MotionTask {
         SWITCH_VOLUME,
         SWITCH_VIDEO,
         SWITCH_BRIGHTNESS,
