@@ -15,8 +15,7 @@ public class GestureDetector {
         SWITCH_VOLUME,
         SWITCH_VIDEO,
         SWITCH_BRIGHTNESS,
-        ADJUST_VOLUME_DOWN,
-        ADJUST_VOLUME_UP,
+        ADJUST_VOLUME,
         WAITING,
         NONE
     }
