@@ -23,6 +23,14 @@ public class GestureDetector {
         NONE
     }
 
+    // A list of possible videos to switch between
+    private static final String[] videoHashes = new String[] {
+            "HzeK7g8cD0Y",
+            "UwxatzcYf9Q",
+            "-QuVe-hjMs0"
+    };
+
+
     // A list of all possible postures
     private static final String[] postures = new String[] {
             "straight_index",
@@ -35,12 +43,9 @@ public class GestureDetector {
             "all_palm"
     };
 
-    // A list of possible videos to switch between
-    private static final String[] videoHashes = new String[] {
-            "HzeK7g8cD0Y",
-            "UwxatzcYf9Q",
-            "-QuVe-hjMs0"
-    };
+    // A list of possible sequences of postures
+    private static final List<String[]> gestures = new ArrayList<>();
+
 
     // A mapping from posture to volume level
     private static final Map<String, Integer> postureToVolume = new HashMap<>();
@@ -48,8 +53,6 @@ public class GestureDetector {
     // A mapping from gestures to volume level
     private static final Map<String, Integer> gestureToBrightness = new HashMap<>();
 
-    // A list of possible sequences of postures
-    private static final List<String[]> gestures = new ArrayList<>();
 
     // Internal track for the current video
     private int currentIndex = -1;
