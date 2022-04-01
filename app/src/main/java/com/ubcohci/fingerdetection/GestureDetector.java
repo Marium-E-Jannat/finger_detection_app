@@ -167,4 +167,15 @@ public class GestureDetector {
         }
         return false;
     }
+
+    private boolean addToBuffer(String posture) {
+        // Check if the last element is the same as posture
+        // If so, don't add
+        if (gestureBuffer.size() > 1 && gestureBuffer.get(gestureBuffer.size() - 1).equals(posture)) {
+            return false;
+        } else {
+            gestureBuffer.add(posture);
+            return true;
+        }
+    }
 }
