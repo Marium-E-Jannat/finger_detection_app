@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * A utility class to buffer and detect posture/gesture.
+ */
 public class GestureDetector {
 
     // An enum define all possible task for each detection result
@@ -100,7 +103,7 @@ public class GestureDetector {
 
     /**
      * Get the task to perform based on the current posture.
-     * @param posture The class name of the current posture.
+     * @param posture The class name of the current posture (exists or not exists)
      * @return A enum representing a task.
      */
     public MotionTask getMotionTask(@NonNull String posture) {
@@ -164,15 +167,29 @@ public class GestureDetector {
         return index > postures.length - 1? null: postures[index];
     }
 
+    /**
+     * Check whether the posture initiate forward or backward jump for the cursor
+     * of the video list.s
+     * @param className The posture's class name.
+     * @return Whether the cursor should move forward or backward.
+     */
     private boolean isNextHash(@NonNull String className) {
         return className.equals(getPostureName(3));
     }
 
+    /**
+     * Get the next hash in line for the next video.
+     * @return The hash value of the next video.
+     */
     private String getNextHash() {
         currentIndex = (currentIndex + 1) % videoHashes.length;
         return videoHashes[currentIndex];
     }
 
+    /**
+     * Get the next hash in line for the next video.
+     * @return The hash value of the next video.
+     */
     private String getPreviousHash() {
         currentIndex--; // Decrement counter
         if (currentIndex < 0) {
@@ -181,6 +198,11 @@ public class GestureDetector {
         return videoHashes[currentIndex];
     }
 
+    /**
+     * Check if a posture is supported.
+     * @param posture The posture's class name.
+     * @return Whether a posture is supported.
+     */
     private boolean isPostureExist(String posture) {
         if (posture != null) {
             for (String _posture: postures) {
@@ -192,6 +214,11 @@ public class GestureDetector {
         return false;
     }
 
+    /**
+     * Add a posture to an internal buffer.
+     * @param posture The posture's class name.
+     * @return Whether the add operation is successful.
+     */
     private boolean addToBuffer(String posture) {
         // Check if the last element is the same as posture
         // If so, don't add
@@ -203,6 +230,11 @@ public class GestureDetector {
         }
     }
 
+    /**
+     * Get the MotionTask based on the posture.
+     * @param posture The posture's class name.
+     * @return The task corresponding to the posture.
+     */
     private MotionTask getPostureTask(@NonNull String posture) {
         if (posture.equals(postures[3]) || posture.equals(postures[4])) {
             return MotionTask.SWITCH_VIDEO;
@@ -213,6 +245,11 @@ public class GestureDetector {
         }
     }
 
+    /**
+     * Get the MotionTask based on a list of postures (gesture)
+     * @param gesture The list of posture's class name.
+     * @return The task corresponding to the gesture.
+     */
     private MotionTask getGestureTask(@NonNull String[] gesture) {
         for (String[] _gesture: gestures) {
             if (Arrays.equals(_gesture, gesture)) {
@@ -222,6 +259,12 @@ public class GestureDetector {
         return MotionTask.NONE;
     }
 
+    /**
+     * From the list of postures (gesture), return its string representation to retrieve
+     * its value (i.e. brightness level).
+     * @param gesture The list of posture's class names.
+     * @return String representation of the gesture.
+     */
     public String gestureToString(@NonNull String[] gesture) {
         final StringBuilder stringBuilder = new StringBuilder();
         String delimiter = "";
