@@ -103,14 +103,38 @@ public class GestureDetector {
      * @param posture The class name of the current posture.
      * @return A enum representing a task.
      */
-    public PostureTask getMotionTask(@NonNull String posture) {
-        if (posture.equals(postures[3]) || posture.equals(postures[4])) {
-            return PostureTask.SWITCH_VIDEO;
-        } else if (posture.equals(postures[0]) || posture.equals(postures[1]) || posture.equals(postures[2])) {
-            return PostureTask.SWITCH_VOLUME;
-        } else {
-            return PostureTask.NONE;
+    public MotionTask getMotionTask(@NonNull String posture) {
+        MotionTask task = null;
+        if (isPostureExist(posture)) { // If the posture exists
+            if (addToBuffer(posture)) { // Add the new posture to buffer
+                switch (gestureBuffer.size()) {
+                    case 1: task = MotionTask.WAITING; break;
+                    case 2:
+                        task = getGestureTask(gestureBuffer.toArray(new String[0])); // Try executing gesture with 2 postures
+                        if (task != MotionTask.NONE) {
+                            gestureBuffer.clear();
+                        } else {
+                            task = MotionTask.WAITING;
+                        }
+                        break;
+                    case 3:
+                        task = getGestureTask(gestureBuffer.toArray(new String[0]));
+                        gestureBuffer.clear();
+                        break; // Execute current gesture with 2 postures
+                }
+            } else { // Duplicate posture to last entry
+                task = MotionTask.WAITING;
+            }
+
+        } else { // Server cannot recognize a posture
+            switch (gestureBuffer.size()) {
+                case 0: task = MotionTask.NONE; break; // Nothing in buffer so do nothing
+                case 1: task = getPostureTask(gestureBuffer.get(0)); break; // Executing current posture
+                case 2: task = getGestureTask(gestureBuffer.toArray(new String[0])); break; // Execute current gesture with 2 postures
+            }
+            gestureBuffer.clear(); // Clear buffer
         }
+        return task;
     }
 
     /**
