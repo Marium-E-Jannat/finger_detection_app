@@ -3,6 +3,7 @@ package com.ubcohci.fingerdetection;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -176,5 +177,35 @@ public class GestureDetector {
             gestureBuffer.add(posture);
             return true;
         }
+    }
+
+    private MotionTask getPostureTask(@NonNull String posture) {
+        if (posture.equals(postures[3]) || posture.equals(postures[4])) {
+            return MotionTask.SWITCH_VIDEO;
+        } else if (posture.equals(postures[0]) || posture.equals(postures[1]) || posture.equals(postures[2])) {
+            return MotionTask.SWITCH_VOLUME;
+        } else {
+            return MotionTask.NONE;
+        }
+    }
+
+    private MotionTask getGestureTask(@NonNull String[] gesture) {
+        for (String[] _gesture: gestures) {
+            if (Arrays.equals(_gesture, gesture)) {
+                return gesture.length == 2? MotionTask.ADJUST_VOLUME: MotionTask.SWITCH_BRIGHTNESS;
+            }
+        }
+        return MotionTask.NONE;
+    }
+
+    public String gestureToString(@NonNull String[] gesture) {
+        final StringBuilder stringBuilder = new StringBuilder();
+        String delimiter = "";
+        for (String s: gesture) {
+            stringBuilder.append(delimiter);
+            stringBuilder.append(s);
+            delimiter = "_";
+        }
+        return stringBuilder.toString();
     }
 }
