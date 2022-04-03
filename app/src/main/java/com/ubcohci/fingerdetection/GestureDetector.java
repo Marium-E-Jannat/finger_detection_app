@@ -152,6 +152,15 @@ public class GestureDetector {
     }
 
     /**
+     * Get the brightness level for the current gesture
+     * @param gesture The gesture string.
+     * @return The brightness level.
+     */
+    public Integer getBrightnessLevel(@NonNull String gesture) {
+        return gestureToBrightness.get(gesture);
+    }
+
+    /**
      * Get the posture's class name at the current index.
      * @param index The index of the posture
      * @return The posture's class name
