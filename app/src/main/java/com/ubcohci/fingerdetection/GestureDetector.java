@@ -93,12 +93,12 @@ public class GestureDetector {
         // Two fingers, then a single finger to decrease the volume
         gestures.add(new String[] {postures[1], postures[0]});
 
-        // One finger - one finger – one finger – brightness level 10
+        // One finger - one finger – one finger – brightness level 40
         gestures.add(new String[] {postures[0], postures[0], postures[0]});
-        gestureToBrightness.put(String.format(Locale.CANADA, "%s_%s_%s", postures[0], postures[0], postures[0]), 10);
-        // One finger - one finger – two fingers – brightness level 20
+        gestureToBrightness.put(String.format(Locale.CANADA, "%s_%s_%s", postures[0], postures[0], postures[0]), 40);
+        // One finger - one finger – two fingers – brightness level 80
         gestures.add(new String[] {postures[0],postures[0], postures[1]});
-        gestureToBrightness.put(String.format(Locale.CANADA, "%s_%s_%s", postures[0], postures[0], postures[1]), 20);
+        gestureToBrightness.put(String.format(Locale.CANADA, "%s_%s_%s", postures[0], postures[0], postures[1]), 80);
     }
 
     /**
