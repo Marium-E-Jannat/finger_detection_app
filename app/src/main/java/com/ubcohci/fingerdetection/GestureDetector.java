@@ -111,15 +111,8 @@ public class GestureDetector {
         if (isPostureExist(posture)) { // If the posture exists
             if (addToBuffer(posture)) { // Add the new posture to buffer
                 switch (gestureBuffer.size()) {
-                    case 1: task = MotionTask.WAITING; break;
-                    case 2:
-                        task = getGestureTask(gestureBuffer.toArray(new String[0])); // Try executing gesture with 2 postures
-                        if (task != MotionTask.NONE) {
-                            gestureBuffer.clear();
-                        } else {
-                            task = MotionTask.WAITING;
-                        }
-                        break;
+                    case 1:
+                    case 2: task = MotionTask.WAITING; break;
                     case 3:
                         task = getGestureTask(gestureBuffer.toArray(new String[0]));
                         gestureBuffer.clear();

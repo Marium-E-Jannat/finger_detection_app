@@ -150,6 +150,7 @@ public class BaseActivity extends AppCompatActivity
     @Override
     public void onResult(Map<String, Object> result) {
         inferenceTracker.setStopTime(); // Stop timer
+        Log.d(TAG, "Average RTT: " + inferenceTracker.getLatency());
 
         // Clear all graphics
         graphicOverlay.clear();
