@@ -1,5 +1,7 @@
 package com.ubcohci.fingerdetection;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.Map;
  * A utility class to buffer and detect posture/gesture.
  */
 public class GestureDetector {
+    private static final String TAG = "GestureDetector";
 
     // An enum define all possible task for each detection result
     public enum MotionTask {
@@ -133,12 +136,13 @@ public class GestureDetector {
                     final String[] gesture = gestureBuffer.toArray(new String[0]);
                     task = getGestureTask(gesture);
                     _currentGesture = gesture;
+                    Log.d(TAG, Arrays.toString(_currentGesture));
                     break; // Execute current gesture
-                case 0: task = MotionTask.NONE; // Nothing in buffer so do nothing
-                default: break; // If there are more than 3 postures in buffer
+                default: task = MotionTask.NONE; break; // If there are more than 3 postures in buffer
             }
             gestureBuffer.clear(); // Clear buffer
         }
+        Log.d(TAG, task.toString());
         return task;
     }
 
@@ -172,10 +176,9 @@ public class GestureDetector {
     /**
      * Update maxTimeout value (i.e. based on new average RTT.)
      * @param maxTimeout The new maxTimeout value.
-     * @return The new maxTimeout value.
      */
-    public int setMaxTimeOut(int maxTimeout) {
-        return this.maxTimeout = maxTimeout;
+    public void setMaxTimeOut(int maxTimeout) {
+        this.maxTimeout = maxTimeout;
     }
 
     /**
