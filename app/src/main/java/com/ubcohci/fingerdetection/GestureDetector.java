@@ -54,12 +54,14 @@ public class GestureDetector {
     // A mapping from gestures to volume level
     private static final Map<String, Integer> gestureToBrightness = new HashMap<>();
 
-
     // Internal track for the current video
     private int currentIndex = -1;
 
     // A buffer to check for a gesture
     private final List<String> gestureBuffer = new ArrayList<>();
+
+    // An array holding the flushed buffer
+    private String[] _currentGesture;
 
     // A integer representing max time-out
     // This is updated on based on newly calculated latency
@@ -127,7 +129,11 @@ public class GestureDetector {
             switch (gestureBuffer.size()) {
                 case 1: task = getPostureTask(gestureBuffer.get(0)); break; // Executing current posture
                 case 2:
-                case 3: task = getGestureTask(gestureBuffer.toArray(new String[0])); break; // Execute current gesture
+                case 3:
+                    final String[] gesture = gestureBuffer.toArray(new String[0]);
+                    task = getGestureTask(gesture);
+                    _currentGesture = gesture;
+                    break; // Execute current gesture
                 case 0: task = MotionTask.NONE; // Nothing in buffer so do nothing
                 default: break; // If there are more than 3 postures in buffer
             }
@@ -274,15 +280,13 @@ public class GestureDetector {
     }
 
     /**
-     * From the list of postures (gesture), return its string representation to retrieve
-     * its value (i.e. brightness level).
-     * @param gesture The list of posture's class names.
+     * Get the string representation of the current flushed gesture from buffer.
      * @return String representation of the gesture.
      */
-    public String gestureToString(@NonNull String[] gesture) {
+    public String getCurrentGestureInString() {
         final StringBuilder stringBuilder = new StringBuilder();
         String delimiter = "";
-        for (String s: gesture) {
+        for (String s: _currentGesture) {
             stringBuilder.append(delimiter);
             stringBuilder.append(s);
             delimiter = "_";
