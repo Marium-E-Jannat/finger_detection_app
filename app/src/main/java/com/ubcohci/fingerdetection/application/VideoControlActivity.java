@@ -3,7 +3,9 @@ package com.ubcohci.fingerdetection.application;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -145,5 +147,29 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
 
     public void switchVideo(@NonNull String newHash) {
         this.player.loadVideo(newHash);
+    }
+
+    public void switchBrightness(int brightness) {
+        float normalizedBrightness = normalize(
+                brightness, 0f, 100f, 0f, 255f
+        );
+
+        // Set system brightness
+        Settings.System.putInt(
+                this.getContentResolver(),
+                Settings.System.SCREEN_BRIGHTNESS,
+                (int) normalizedBrightness
+        );
+
+        // Set current screen brightness
+        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+        layoutParams.screenBrightness = brightness;
+        getWindow().setAttributes(layoutParams);
+    }
+
+    private float normalize(float val, float inMin, float inMax, float outMin, float outMax) {
+        float inRange = inMax - inMin;
+        float maxRange = outMax - outMin;
+        return (val - inMin) * maxRange / inRange + outMin;
     }
 }
