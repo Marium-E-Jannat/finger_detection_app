@@ -109,14 +109,14 @@ public class GestureDetector {
      * @return A enum representing a task.
      */
     public MotionTask getMotionTask(@NonNull String posture) {
-        MotionTask task = null;
+        MotionTask task;
         if (isPostureExist(posture)) { // If the posture exists
             if (addToBuffer(posture)) { // Add the new posture to buffer
                 // Check if timeout is true
                 final long now = System.currentTimeMillis();
                 // If there is a timeout, do nothing and clear buffer
                 // A flag to check if timeOut situation is reached!
-                if (lastDetectTime > 0 && (now - lastDetectTime > maxTimeout)) {
+                if (gestureBuffer.size() > 0 && (now - lastDetectTime > maxTimeout)) {
                     gestureBuffer.clear(); // Clear all postures in buffer
                     task = MotionTask.NONE; // Set as none
                 } else {
