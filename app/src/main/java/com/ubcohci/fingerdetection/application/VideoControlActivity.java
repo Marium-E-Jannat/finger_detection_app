@@ -124,8 +124,18 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
             case SWITCH_VIDEO:
                 switchVideo(gestureDetector.getAnotherHash(className));
                 break;
-            default: // Do nothing if there is no posture detected
+            case SWITCH_BRIGHTNESS:
+                switchBrightness(
+                        gestureDetector.getBrightnessLevel(gestureDetector.getCurrentGestureInString())
+                );
+                break;
+            case WAITING:
+            case NONE:
+            default: break;// Do nothing if there is no posture detected
         }
+
+        // Set new maxTimeout = 3 * RTT
+        gestureDetector.setMaxTimeOut(((int)inferenceTracker.getLatency() * 3));
     }
 
     public void switchVolume(int volumeLevel) {
