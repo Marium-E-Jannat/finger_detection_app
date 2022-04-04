@@ -63,13 +63,10 @@ public class GestureDetector {
 
     // A integer representing max time-out
     // This is updated on based on newly calculated latency
-    private int maxTimeout;
+    private int maxTimeout = 0;
 
     // Representing the time marker for last detected posture.
     private long lastDetectTime;
-
-    // A flag to check if timeOut situation is reached!
-    private boolean isTimeout;
 
     /**
      * Constructor
@@ -110,23 +107,29 @@ public class GestureDetector {
         MotionTask task = null;
         if (isPostureExist(posture)) { // If the posture exists
             if (addToBuffer(posture)) { // Add the new posture to buffer
-                switch (gestureBuffer.size()) {
-                    case 1:
-                    case 2: task = MotionTask.WAITING; break;
-                    case 3:
-                        task = getGestureTask(gestureBuffer.toArray(new String[0]));
-                        gestureBuffer.clear();
-                        break; // Execute current gesture with 2 postures
+                // Check if timeout is true
+                final long now = System.currentTimeMillis();
+                // If there is a timeout, do nothing and clear buffer
+                // A flag to check if timeOut situation is reached!
+                if (lastDetectTime > 0 && (now - lastDetectTime > maxTimeout)) {
+                    gestureBuffer.clear(); // Clear all postures in buffer
+                    task = MotionTask.NONE; // Set as none
+                } else {
+                    task = MotionTask.WAITING;
                 }
-            } else { // Duplicate posture to last entry
+                // Update lastDetectTime
+                lastDetectTime = now;
+            } else {
                 task = MotionTask.WAITING;
             }
-
         } else { // Server cannot recognize a posture
+            // This means we will flush the buffer
             switch (gestureBuffer.size()) {
-                case 0: task = MotionTask.NONE; break; // Nothing in buffer so do nothing
                 case 1: task = getPostureTask(gestureBuffer.get(0)); break; // Executing current posture
-                case 2: task = getGestureTask(gestureBuffer.toArray(new String[0])); break; // Execute current gesture with 2 postures
+                case 2:
+                case 3: task = getGestureTask(gestureBuffer.toArray(new String[0])); break; // Execute current gesture
+                case 0: task = MotionTask.NONE; // Nothing in buffer so do nothing
+                default: break; // If there are more than 3 postures in buffer
             }
             gestureBuffer.clear(); // Clear buffer
         }
@@ -158,6 +161,15 @@ public class GestureDetector {
      */
     public Integer getBrightnessLevel(@NonNull String gesture) {
         return gestureToBrightness.get(gesture);
+    }
+
+    /**
+     * Update maxTimeout value (i.e. based on new average RTT.)
+     * @param maxTimeout The new maxTimeout value.
+     * @return The new maxTimeout value.
+     */
+    public int setMaxTimeOut(int maxTimeout) {
+        return this.maxTimeout = maxTimeout;
     }
 
     /**
