@@ -114,11 +114,10 @@ public class GestureDetector {
      * @param posture The class name of the current posture (exists or not exists)
      * @return A enum representing a task.
      */
-    public MotionTask getMotionTask(@NonNull String posture) {
+    public MotionTask getMotionTask(@NonNull String posture, Map<String, Integer> coordinates) {
         MotionTask task;
         if (isPostureExist(posture)) { // If the posture exists
             if (addToBuffer(posture)) { // Add the new posture to buffer
-                // TODO: Add check for gesture (moving posture) using bounding box
                 // Check if timeout is true
                 final long now = System.currentTimeMillis();
                 // If there is a timeout, do nothing and clear buffer
@@ -132,9 +131,9 @@ public class GestureDetector {
                 // Update lastDetectTime
                 lastDetectTime = now;
             } else {
+                // TODO: Add check for gesture (moving posture) using bounding box
                 task = MotionTask.WAITING;
             }
-
             // Reset tolerant count
             toleranceCount = 0;
         } else { // Server cannot recognize a posture
@@ -156,9 +155,9 @@ public class GestureDetector {
                     default: task = MotionTask.NONE; break; // If there are more than 3 postures in buffer
                 }
                 gestureBuffer.clear(); // Clear buffer
+                // Reset tolerant count
+                toleranceCount = 0;
             }
-            // Reset tolerant count
-            toleranceCount = 0;
         }
         Log.d(TAG, task.toString());
         return task;
