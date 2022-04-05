@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A utility class to buffer and detect posture/gesture.
@@ -23,6 +24,8 @@ public class GestureDetector {
         SWITCH_VIDEO,
         SWITCH_BRIGHTNESS,
         ADJUST_VOLUME,
+        ADVANCE_FRAME_LEFT,
+        ADVANCE_FRAME_RIGHT,
         WAITING,
         NONE
     }
@@ -49,7 +52,6 @@ public class GestureDetector {
 
     // A list of possible sequences of postures
     private static final List<String[]> gestures = new ArrayList<>();
-
 
     // A mapping from posture to volume level
     private static final Map<String, Integer> postureToVolume = new HashMap<>();
@@ -78,6 +80,12 @@ public class GestureDetector {
 
     // A tolerance count
     private int toleranceCount = 0;
+
+    // A buffer for bounding boxes
+    private Map<String, Integer> previousBoundingBox;
+
+    // Bounding box change threshold
+    private static final int pixelThreshold = 100; // dp
 
     /**
      * Constructor
@@ -131,8 +139,27 @@ public class GestureDetector {
                 // Update lastDetectTime
                 lastDetectTime = now;
             } else {
-                // TODO: Add check for gesture (moving posture) using bounding box
-                task = MotionTask.WAITING;
+                // Add check for gesture (moving posture) using bounding box
+                if (previousBoundingBox == null) {
+                    task = MotionTask.WAITING;
+                } else {
+                    // Check if the change is significant
+                    // Note: We focus on left sides
+                    // as finger movements have its based mostly fixed
+                    // And we only consider horizontal movements
+
+                    // Get left
+                    int newLeft = Objects.requireNonNull(coordinates.get("left"));
+                    int oldLeft = Objects.requireNonNull(previousBoundingBox.get("left"));
+
+                    if (Math.abs(newLeft - oldLeft) > pixelThreshold) {
+                        task = newLeft > oldLeft? MotionTask.ADVANCE_FRAME_RIGHT: MotionTask.ADVANCE_FRAME_LEFT;
+                    } else {
+                        task = MotionTask.WAITING;
+                    }
+                }
+                // Set bounding box buffer to new coordinates
+                previousBoundingBox = coordinates;
             }
             // Reset tolerant count
             toleranceCount = 0;
