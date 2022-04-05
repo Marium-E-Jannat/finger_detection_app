@@ -20,6 +20,9 @@ import com.ubcohci.fingerdetection.databinding.ActivityVideoControlBinding;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class VideoControlActivity extends BaseActivity implements YouTubePlayer.OnInitializedListener {
 
     // TAGS
@@ -109,8 +112,15 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
         // Get class name
         String className = data.getString("class_name");
 
+        // Extract bounding box of the posture to detect gesture
+        Map<String, Integer> coordinates = new HashMap<>();
+        coordinates.put("top", data.getInt("Y_min"));
+        coordinates.put("bottom", data.getInt("Y_max"));
+        coordinates.put("left", data.getInt("X_min"));
+        coordinates.put("right", data.getInt("X_max"));
+
         // Get the task to perform based on posture
-        switch (gestureDetector.getMotionTask(className)) {
+        switch (gestureDetector.getMotionTask(className, coordinates)) {
             case SWITCH_VOLUME:
                 Integer volumeLevel = gestureDetector.findVolumeLevel(className);
                 // If the posture is not found or the same posture is detected
