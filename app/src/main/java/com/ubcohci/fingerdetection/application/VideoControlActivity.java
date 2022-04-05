@@ -139,6 +139,10 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
                         gestureDetector.getBrightnessLevel(gestureDetector.getCurrentGestureInString())
                 );
                 break;
+            case ADVANCE_FRAME_RIGHT:
+                advanceVideoFrame(true); break;
+            case ADVANCE_FRAME_LEFT:
+                advanceVideoFrame(false); break;
             case WAITING:
             case NONE:
             default: break;// Do nothing if there is no posture detected
@@ -185,6 +189,11 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
         WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
         layoutParams.screenBrightness = brightness;
         getWindow().setAttributes(layoutParams);
+    }
+
+    public void advanceVideoFrame(boolean forward) {
+        if (this.player == null) return;
+        this.player.seekRelativeMillis(forward? 100: -100);
     }
 
     private float normalize(float val, float inMin, float inMax, float outMin, float outMax) {
