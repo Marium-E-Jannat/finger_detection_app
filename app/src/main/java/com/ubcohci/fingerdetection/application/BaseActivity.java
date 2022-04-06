@@ -130,6 +130,7 @@ public class BaseActivity extends AppCompatActivity
     public void handle(@NonNull ImageProxy image) {
         this.currentFrame = image;
         try {
+            Log.d(TAG, "Sending image to backend...");
             this.inferenceTracker.setStartTime(); // Set timer
             // Start sending image
             httpClient.start(
@@ -150,7 +151,7 @@ public class BaseActivity extends AppCompatActivity
     @Override
     public void onResult(Map<String, Object> result) {
         inferenceTracker.setStopTime(); // Stop timer
-        Log.d(TAG, "Average RTT: " + inferenceTracker.getLatency());
+        Log.d(TAG, "Average RTT: " + inferenceTracker.getLatency() + " ms");
 
         // Clear all graphics
         graphicOverlay.clear();
@@ -193,9 +194,15 @@ public class BaseActivity extends AppCompatActivity
 
     @Override
     public void onFailure(Exception e) {
+        inferenceTracker.setStopTime(); // Stop timer
+
+        Log.d(TAG, "Average RTT: " + inferenceTracker.getLatency());
+        Log.d(TAG, e.getMessage());
+
         graphicOverlay.clear();
         graphicOverlay.postInvalidate();
-        Log.d(TAG, e.getMessage());
+
+        this.currentFrame.close();
     }
 
     @Override
