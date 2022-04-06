@@ -114,15 +114,15 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
 
         // Extract bounding box of the posture to detect gesture
         Map<String, Integer> coordinates = new HashMap<>();
-        coordinates.put("top", data.getInt("Y_min"));
-        coordinates.put("bottom", data.getInt("Y_max"));
-        coordinates.put("left", data.getInt("X_min"));
-        coordinates.put("right", data.getInt("X_max"));
+        coordinates.put("top", data.getInt("y_min"));
+        coordinates.put("bottom", data.getInt("y_max"));
+        coordinates.put("left", data.getInt("x_min"));
+        coordinates.put("right", data.getInt("x_max"));
 
         // Get the task to perform based on posture
         switch (gestureDetector.getMotionTask(className, coordinates)) {
             case SWITCH_VOLUME:
-                Integer volumeLevel = gestureDetector.findVolumeLevel(className);
+                Integer volumeLevel = gestureDetector.findVolumeLevel(gestureDetector.getCurrentGestureInString());
                 // If the posture is not found or the same posture is detected
                 if (volumeLevel == null || currentLevel == volumeLevel) {
                     Log.d(TAG, "Volume remains the same!");
@@ -132,7 +132,7 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
                 this.currentLevel = volumeLevel;
                 break;
             case SWITCH_VIDEO:
-                switchVideo(gestureDetector.getAnotherHash(className));
+                switchVideo(gestureDetector.getAnotherHash(gestureDetector.getCurrentGestureInString()));
                 break;
             case SWITCH_BRIGHTNESS:
                 switchBrightness(

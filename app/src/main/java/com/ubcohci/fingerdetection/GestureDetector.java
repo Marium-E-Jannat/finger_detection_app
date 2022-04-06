@@ -172,18 +172,21 @@ public class GestureDetector {
                 toleranceCount++;
                 task = MotionTask.WAITING;
             } else {
+                // Keep a holder of all postures in buffer
+                final String[] gesture = gestureBuffer.toArray(new String[0]);
+
                 // This means we will flush the buffer
                 switch (gestureBuffer.size()) {
                     case 1: task = getPostureTask(gestureBuffer.get(0)); break; // Executing current posture
                     case 2:
-                    case 3:
-                        final String[] gesture = gestureBuffer.toArray(new String[0]);
-                        task = getGestureTask(gesture);
-                        _currentGesture = gesture;
-                        Log.d(TAG, Arrays.toString(_currentGesture));
-                        break; // Execute current gesture
+                    case 3: task = getGestureTask(gesture); break; // Execute current gesture
                     default: task = MotionTask.NONE; break; // If there are more than 3 postures or no at all in buffer
                 }
+
+                // Update buffer holder
+                _currentGesture = gesture;
+                Log.d(TAG, Arrays.toString(_currentGesture));
+
                 gestureBuffer.clear(); // Clear buffer
 
                 // Reset tolerant count
