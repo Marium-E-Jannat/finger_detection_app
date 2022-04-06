@@ -187,7 +187,7 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
 
         // Set current screen brightness
         WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-        layoutParams.screenBrightness = brightness;
+        layoutParams.screenBrightness = brightness / 100f;
         getWindow().setAttributes(layoutParams);
     }
 
