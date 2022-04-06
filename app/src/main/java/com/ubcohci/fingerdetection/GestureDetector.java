@@ -129,7 +129,7 @@ public class GestureDetector {
                 // Check if timeout is true
                 final long now = System.currentTimeMillis();
                 // If there is a timeout, do nothing and clear buffer
-                // A flag to check if timeOut situation is reached!
+                // Only check if in-between posture sequence
                 if (gestureBuffer.size() > 0 && (now - lastDetectTime > maxTimeout)) {
                     gestureBuffer.clear(); // Clear all postures in buffer
                     task = MotionTask.NONE; // Set as none
@@ -182,7 +182,7 @@ public class GestureDetector {
                         _currentGesture = gesture;
                         Log.d(TAG, Arrays.toString(_currentGesture));
                         break; // Execute current gesture
-                    default: task = MotionTask.NONE; break; // If there are more than 3 postures in buffer
+                    default: task = MotionTask.NONE; break; // If there are more than 3 postures or no at all in buffer
                 }
                 gestureBuffer.clear(); // Clear buffer
 
