@@ -140,7 +140,8 @@ public class GestureDetector {
                 lastDetectTime = now;
             } else {
                 // Add check for gesture (moving posture) using bounding box
-                if (previousBoundingBox == null) {
+                // Only check if there is only 1 posture in buffer
+                if (gestureBuffer.size() > 1) {
                     task = MotionTask.WAITING;
                 } else {
                     // Check if the change is significant
@@ -158,9 +159,11 @@ public class GestureDetector {
                         task = MotionTask.WAITING;
                     }
                 }
-                // Set bounding box buffer to new coordinates
-                previousBoundingBox = coordinates;
             }
+
+            // Set bounding box buffer to new coordinates
+            previousBoundingBox = coordinates;
+
             // Reset tolerant count
             toleranceCount = 0;
         } else { // Server cannot recognize a posture
@@ -182,8 +185,12 @@ public class GestureDetector {
                     default: task = MotionTask.NONE; break; // If there are more than 3 postures in buffer
                 }
                 gestureBuffer.clear(); // Clear buffer
+
                 // Reset tolerant count
                 toleranceCount = 0;
+
+                // Reset bounding box
+                previousBoundingBox = null;
             }
         }
         Log.d(TAG, task.toString());
