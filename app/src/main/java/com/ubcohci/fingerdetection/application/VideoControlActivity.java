@@ -3,7 +3,6 @@ package com.ubcohci.fingerdetection.application;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -33,9 +32,6 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
 
     // Video player
     private YouTubePlayer player;
-
-    // A tracker of the current volume level
-    private int currentLevel = -1;
 
     // A gesture detector
     private GestureDetector gestureDetector;
@@ -126,7 +122,6 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
             case SWITCH_VOLUME:
                 Integer volumeLevel = gestureDetector.findVolumeLevel(gestureDetector.getCurrentGestureInString());
                 switchVolume(volumeLevel);
-                this.currentLevel = volumeLevel;
                 break;
             case SWITCH_VIDEO:
                 switchVideo(gestureDetector.getAnotherHash(gestureDetector.getCurrentGestureInString()));
@@ -179,11 +174,5 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
     public void advanceVideoFrame(boolean forward) {
         if (this.player == null) return;
         this.player.seekRelativeMillis(forward? 2000: -2000);
-    }
-
-    private float normalize(float val, float inMin, float inMax, float outMin, float outMax) {
-        float inRange = inMax - inMin;
-        float maxRange = outMax - outMin;
-        return (val - inMin) * maxRange / inRange + outMin;
     }
 }
