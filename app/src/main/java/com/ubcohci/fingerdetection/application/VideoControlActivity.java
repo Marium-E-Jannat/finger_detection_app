@@ -119,15 +119,12 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
         coordinates.put("left", data.getInt("x_min"));
         coordinates.put("right", data.getInt("x_max"));
 
+        GestureDetector.MotionTask motionTask = gestureDetector.getMotionTask(className, coordinates);
+        Log.d(TAG, motionTask.toString());
         // Get the task to perform based on posture
-        switch (gestureDetector.getMotionTask(className, coordinates)) {
+        switch (motionTask) {
             case SWITCH_VOLUME:
                 Integer volumeLevel = gestureDetector.findVolumeLevel(gestureDetector.getCurrentGestureInString());
-                // If the posture is not found or the same posture is detected
-                if (volumeLevel == null || currentLevel == volumeLevel) {
-                    Log.d(TAG, "Volume remains the same!");
-                    return;
-                }
                 switchVolume(volumeLevel);
                 this.currentLevel = volumeLevel;
                 break;
@@ -148,8 +145,8 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
             default: break;// Do nothing if there is no posture detected
         }
 
-        // Set new maxTimeout = 3 * RTT
-        gestureDetector.setMaxTimeOut(((int)inferenceTracker.getLatency() * 3));
+        // Set new maxTimeout = 5s
+        gestureDetector.setMaxTimeOut(5);
     }
 
     public void switchVolume(int volumeLevel) {
@@ -174,9 +171,7 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
     }
 
     public void switchBrightness(int brightness) {
-        float normalizedBrightness = normalize(
-                brightness, 0f, 100f, 0f, 255f
-        );
+        Log.d(TAG, "Brightness change to: " + brightness);
 
         // Set current screen brightness
         WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
