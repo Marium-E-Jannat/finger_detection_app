@@ -66,6 +66,9 @@ public class BaseActivity extends AppCompatActivity
     // Activity bundle data
     public boolean showDebug;
 
+    // Add a tracker from last time an image is sent
+    private long lastSentTimeMarker;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +133,12 @@ public class BaseActivity extends AppCompatActivity
     public void handle(@NonNull ImageProxy image) {
         this.currentFrame = image;
         try {
+            final long now = System.currentTimeMillis();
+            if (lastSentTimeMarker > 0 && (now - lastSentTimeMarker) < 1000) {
+                image.close();
+                return;
+            }
+
             Log.d(TAG, "Sending image to backend...");
             this.inferenceTracker.setStartTime(); // Set timer
             // Start sending image
@@ -142,6 +151,8 @@ public class BaseActivity extends AppCompatActivity
                     }},
                     CameraUtils.imageProxyToByteArray(image)
             );
+
+            lastSentTimeMarker = now;
         } catch (IOException e) {
             Log.d(TAG, e.getMessage());
             image.close(); // Close the image
@@ -159,7 +170,6 @@ public class BaseActivity extends AppCompatActivity
         // Extract the information
         try {
             JSONObject jsonObject = (JSONObject) Objects.requireNonNull(result.get("data"));
-            Log.d(TAG, "Data: " + jsonObject);
 
             // Get detection information
             DetectionGraphic.DetectionInfo info = new DetectionGraphic.DetectionInfo(
