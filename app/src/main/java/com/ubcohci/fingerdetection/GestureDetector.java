@@ -78,7 +78,6 @@ public class GestureDetector {
         //Straight two fingers to set the sound at 20x
         postureToVolume.put(postures[1], 20);
         //Straight all fingers to set the sound at 30x
-
         postureToVolume.put(postures[2], 30);
 
         // V to switch to next video --> Use getNextHash()
