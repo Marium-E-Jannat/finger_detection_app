@@ -84,14 +84,18 @@ public class GestureDetector {
         // V to switch to next video --> Use getNextHash()
         // Hook to switch to previous video --> Use getPreviousHash()
 
-        // Single finger, then two fingers to increase the volume
+        // Single finger, then two fingers to advance frames forwards
         gestures.add(new String[] {postures[0], postures[1]});
-        // Two fingers, then a single finger to decrease the volume
+        // Two fingers, then a single finger to advance frames backwards
         gestures.add(new String[] {postures[1], postures[0]});
 
-        // One finger - one finger – one finger – brightness level 20
+        // all-hook-all – brightness level 10
         gestures.add(new String[] {postures[2], postures[4], postures[2]});
         gestureToBrightness.put(String.format(Locale.CANADA, "%s_%s_%s", postures[2], postures[4], postures[2]), 10);
+
+        // hook-all-hook – brightness level 90
+        gestures.add(new String[] {postures[4], postures[2], postures[4]});
+        gestureToBrightness.put(String.format(Locale.CANADA, "%s_%s_%s", postures[4], postures[2], postures[4]), 90);
     }
 
     /**
@@ -262,7 +266,8 @@ public class GestureDetector {
     private MotionTask getGestureTask(@NonNull String[] gesture) {
         for (String[] _gesture: gestures) {
             if (Arrays.equals(_gesture, gesture)) {
-                return gesture.length == 2? MotionTask.ADJUST_VOLUME: MotionTask.SWITCH_BRIGHTNESS;
+                return gesture.length == 3? MotionTask.SWITCH_BRIGHTNESS:
+                        gesture[0].equals(postures[0])? MotionTask.ADVANCE_FRAME_LEFT: MotionTask.ADVANCE_FRAME_RIGHT;
             }
         }
         return MotionTask.NONE;

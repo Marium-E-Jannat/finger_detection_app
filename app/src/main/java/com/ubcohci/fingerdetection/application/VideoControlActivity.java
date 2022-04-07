@@ -178,7 +178,7 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
 
     public void advanceVideoFrame(boolean forward) {
         if (this.player == null) return;
-        this.player.seekRelativeMillis(forward? 100: -100);
+        this.player.seekRelativeMillis(forward? 2000: -2000);
     }
 
     private float normalize(float val, float inMin, float inMax, float outMin, float outMax) {
