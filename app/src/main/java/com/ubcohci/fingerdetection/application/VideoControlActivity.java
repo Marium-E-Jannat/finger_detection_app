@@ -144,9 +144,6 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
             case NONE:
             default: break;// Do nothing if there is no posture detected
         }
-
-        // Set new maxTimeout = 5s
-        gestureDetector.setMaxTimeOut(5);
     }
 
     public void switchVolume(int volumeLevel) {

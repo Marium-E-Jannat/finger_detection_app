@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * A utility class to buffer and detect posture/gesture.
@@ -40,14 +39,7 @@ public class GestureDetector {
 
     // A list of all possible postures
     private static final String[] postures = new String[] {
-            "straight_index",
-            "straight_two",
-            "straight_all",
-            "V",
-            "hook",
-            "one_palm",
-            "two_palm",
-            "all_palm"
+            "straight_index", "straight_two", "straight_all", "V", "hook index", "one on bop", "two on bop", "all on bop"
     };
 
     // A list of possible sequences of postures
@@ -68,24 +60,11 @@ public class GestureDetector {
     // An array holding the flushed buffer
     private String[] _currentGesture;
 
-    // A integer representing max time-out
-    // This is updated on based on newly calculated latency
-    private int maxTimeout = 0;
-
-    // Representing the time marker for last detected posture.
-    private long lastDetectTime;
-
     // Max value of tolerant count
-    private static final int maxTolerantCount = 3;
+    private static final int maxTolerantCount = 5;
 
     // A tolerance count
     private int toleranceCount = 0;
-
-    // A buffer for bounding boxes
-    private Map<String, Integer> previousBoundingBox;
-
-    // Bounding box change threshold
-    private static final int pixelThreshold = 100; // dp
 
     /**
      * Constructor
@@ -99,6 +78,7 @@ public class GestureDetector {
         //Straight two fingers to set the sound at 20x
         postureToVolume.put(postures[1], 20);
         //Straight all fingers to set the sound at 30x
+
         postureToVolume.put(postures[2], 30);
 
         // V to switch to next video --> Use getNextHash()
@@ -109,12 +89,9 @@ public class GestureDetector {
         // Two fingers, then a single finger to decrease the volume
         gestures.add(new String[] {postures[1], postures[0]});
 
-        // One finger - one finger – one finger – brightness level 40
-        gestures.add(new String[] {postures[0], postures[0], postures[0]});
-        gestureToBrightness.put(String.format(Locale.CANADA, "%s_%s_%s", postures[0], postures[0], postures[0]), 40);
-        // One finger - one finger – two fingers – brightness level 80
-        gestures.add(new String[] {postures[0],postures[0], postures[1]});
-        gestureToBrightness.put(String.format(Locale.CANADA, "%s_%s_%s", postures[0], postures[0], postures[1]), 80);
+        // One finger - one finger – one finger – brightness level 20
+        gestures.add(new String[] {postures[2], postures[4], postures[2]});
+        gestureToBrightness.put(String.format(Locale.CANADA, "%s_%s_%s", postures[2], postures[4], postures[2]), 10);
     }
 
     /**
@@ -122,47 +99,12 @@ public class GestureDetector {
      * @param posture The class name of the current posture (exists or not exists)
      * @return A enum representing a task.
      */
+    @SuppressWarnings("unused")
     public MotionTask getMotionTask(@NonNull String posture, Map<String, Integer> coordinates) {
         MotionTask task;
         if (isPostureExist(posture)) { // If the posture exists
-            if (addToBuffer(posture)) { // Add the new posture to buffer
-                // Check if timeout is true
-                final long now = System.currentTimeMillis();
-                // If there is a timeout, do nothing and clear buffer
-                // Only check if in-between posture sequence
-                if (gestureBuffer.size() > 0 && (now - lastDetectTime > maxTimeout)) {
-                    gestureBuffer.clear(); // Clear all postures in buffer
-                    task = MotionTask.NONE; // Set as none
-                } else {
-                    task = MotionTask.WAITING;
-                }
-                // Update lastDetectTime
-                lastDetectTime = now;
-            } else {
-                // Add check for gesture (moving posture) using bounding box
-                // Only check if there is only 1 posture in buffer
-                if (gestureBuffer.size() > 1) {
-                    task = MotionTask.WAITING;
-                } else {
-                    // Check if the change is significant
-                    // Note: We focus on left sides
-                    // as finger movements have its based mostly fixed
-                    // And we only consider horizontal movements
-
-                    // Get left
-                    int newLeft = Objects.requireNonNull(coordinates.get("left"));
-                    int oldLeft = Objects.requireNonNull(previousBoundingBox.get("left"));
-
-                    if (Math.abs(newLeft - oldLeft) > pixelThreshold) {
-                        task = newLeft > oldLeft? MotionTask.ADVANCE_FRAME_RIGHT: MotionTask.ADVANCE_FRAME_LEFT;
-                    } else {
-                        task = MotionTask.WAITING;
-                    }
-                }
-            }
-
-            // Set bounding box buffer to new coordinates
-            previousBoundingBox = coordinates;
+            addToBuffer(posture); // Add the new posture to buffer
+            task = MotionTask.WAITING;
 
             // Reset tolerant count
             toleranceCount = 0;
@@ -191,11 +133,9 @@ public class GestureDetector {
 
                 // Reset tolerant count
                 toleranceCount = 0;
-
-                // Reset bounding box
-                previousBoundingBox = null;
             }
         }
+        Log.d(TAG, "Current buffer: " + Arrays.toString(gestureBuffer.toArray(new String[0])));
         Log.d(TAG, task.toString());
         return task;
     }
@@ -225,14 +165,6 @@ public class GestureDetector {
      */
     public Integer getBrightnessLevel(@NonNull String gesture) {
         return gestureToBrightness.get(gesture);
-    }
-
-    /**
-     * Update maxTimeout value (i.e. based on new average RTT.)
-     * @param maxTimeout The new maxTimeout value.
-     */
-    public void setMaxTimeOut(int maxTimeout) {
-        this.maxTimeout = maxTimeout;
     }
 
     /**
@@ -299,7 +231,7 @@ public class GestureDetector {
     private boolean addToBuffer(String posture) {
         // Check if the last element is the same as posture
         // If so, don't add
-        if (gestureBuffer.size() > 1 && gestureBuffer.get(gestureBuffer.size() - 1).equals(posture)) {
+        if (gestureBuffer.size() > 0 && gestureBuffer.get(gestureBuffer.size() - 1).equals(posture)) {
             return false;
         } else {
             gestureBuffer.add(posture);
@@ -341,6 +273,7 @@ public class GestureDetector {
      * @return String representation of the gesture.
      */
     public String getCurrentGestureInString() {
+        Log.d(TAG, "Before: " + Arrays.toString(_currentGesture));
         final StringBuilder stringBuilder = new StringBuilder();
         String delimiter = "";
         for (String s: _currentGesture) {
@@ -348,6 +281,7 @@ public class GestureDetector {
             stringBuilder.append(s);
             delimiter = "_";
         }
+        Log.d(TAG, "After: " + stringBuilder);
         return stringBuilder.toString();
     }
 }
