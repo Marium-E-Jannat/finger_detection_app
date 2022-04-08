@@ -37,9 +37,6 @@ public class OpenAppActivity extends BaseActivity {
         // Set graphic overlay
         this.graphicOverlay = viewBinding.webviewOverlay;
 
-        // Get web view
-        viewBinding.webView.loadUrl(urls[0]);
-
         // Init a gesture detector
         gestureDetector = new GestureDetector();
 
