@@ -15,6 +15,19 @@
 
     </WebView>
 
+    <TextView
+        android:id="@+id/instruction_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tell_me_to_switch_app"
+        android:textColor="#263238"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.ubcohci.fingerdetection.graphics.GraphicOverlay
         android:id="@+id/webviewOverlay"
         android:layout_width="wrap_content"
