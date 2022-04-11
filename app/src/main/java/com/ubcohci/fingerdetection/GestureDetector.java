@@ -64,7 +64,7 @@ public class GestureDetector {
     private static final int maxTolerantCount = 0;
 
     // A tolerance count
-    private int toleranceCount = 0;
+    private int toleranceCount = 1;
 
     /**
      * Constructor
