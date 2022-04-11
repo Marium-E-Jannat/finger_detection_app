@@ -61,7 +61,7 @@ public class GestureDetector {
     private String[] _currentGesture;
 
     // Max value of tolerant count
-    private static final int maxTolerantCount = 5;
+    private static final int maxTolerantCount = 0;
 
     // A tolerance count
     private int toleranceCount = 0;
@@ -90,7 +90,7 @@ public class GestureDetector {
 
         // all-hook-all – brightness level 10
         gestures.add(new String[] {postures[2], postures[4], postures[2]});
-        gestureToBrightness.put(String.format(Locale.CANADA, "%s_%s_%s", postures[2], postures[4], postures[2]), 10);
+        gestureToBrightness.put(String.format(Locale.CANADA, "%s_%s_%s", postures[2], postures[4], postures[2]), 2);
 
         // hook-all-hook – brightness level 90
         gestures.add(new String[] {postures[4], postures[2], postures[4]});
