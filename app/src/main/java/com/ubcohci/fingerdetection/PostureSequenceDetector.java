@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * A utility class to buffer and detect posture/gesture.
  */
-public class GestureDetector {
+public class PostureSequenceDetector {
     private static final String TAG = "GestureDetector";
 
     // An enum define all possible task for each detection result
@@ -69,7 +69,7 @@ public class GestureDetector {
     /**
      * Constructor
      */
-    public GestureDetector() {}
+    public PostureSequenceDetector() {}
 
     // Static initializer
     static {

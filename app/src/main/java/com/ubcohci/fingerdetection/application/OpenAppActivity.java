@@ -3,7 +3,7 @@ package com.ubcohci.fingerdetection.application;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.ubcohci.fingerdetection.GestureDetector;
+import com.ubcohci.fingerdetection.PostureSequenceDetector;
 import com.ubcohci.fingerdetection.databinding.ActivityOpenAppBinding;
 
 import org.json.JSONException;
@@ -24,7 +24,7 @@ public class OpenAppActivity extends BaseActivity {
     private ActivityOpenAppBinding viewBinding;
 
     // Gesture detector
-    private GestureDetector gestureDetector;
+    private PostureSequenceDetector postureSequenceDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class OpenAppActivity extends BaseActivity {
         this.graphicOverlay = viewBinding.webviewOverlay;
 
         // Init a gesture detector
-        gestureDetector = new GestureDetector();
+        postureSequenceDetector = new PostureSequenceDetector();
 
         // Start camera
         if (permissionManager.isAllPermissionsGranted()) {
@@ -61,12 +61,12 @@ public class OpenAppActivity extends BaseActivity {
         coordinates.put("left", data.getInt("x_min"));
         coordinates.put("right", data.getInt("x_max"));
 
-        GestureDetector.MotionTask motionTask = gestureDetector.getMotionTask(className, coordinates);
+        PostureSequenceDetector.MotionTask motionTask = postureSequenceDetector.getMotionTask(className, coordinates);
         Log.d(TAG, motionTask.toString());
 
-        if (motionTask == GestureDetector.MotionTask.SWITCH_VOLUME) {
+        if (motionTask == PostureSequenceDetector.MotionTask.SWITCH_VOLUME) {
             // Get which volume mapping (10->facebook, 20->youtube)
-            int volumeLevel = gestureDetector.findVolumeLevel(gestureDetector.getCurrentGestureInString());
+            int volumeLevel = postureSequenceDetector.findVolumeLevel(postureSequenceDetector.getCurrentGestureInString());
             String url = urls[volumeLevel == 10? 0:1];
             viewBinding.webView.loadUrl(url);
         }

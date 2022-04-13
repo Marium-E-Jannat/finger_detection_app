@@ -13,7 +13,7 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragmentX;
 import com.ubcohci.fingerdetection.BuildConfig;
-import com.ubcohci.fingerdetection.GestureDetector;
+import com.ubcohci.fingerdetection.PostureSequenceDetector;
 import com.ubcohci.fingerdetection.databinding.ActivityVideoControlBinding;
 
 import org.json.JSONException;
@@ -34,7 +34,7 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
     private YouTubePlayer player;
 
     // A gesture detector
-    private GestureDetector gestureDetector;
+    private PostureSequenceDetector postureSequenceDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
         this.graphicOverlay = viewBinding.videoGraphicOverlay;
 
         // Init a gesture detector
-        gestureDetector = new GestureDetector();
+        postureSequenceDetector = new PostureSequenceDetector();
 
         // Init youtube API
         initYoutubeAPI();
@@ -115,20 +115,20 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
         coordinates.put("left", data.getInt("x_min"));
         coordinates.put("right", data.getInt("x_max"));
 
-        GestureDetector.MotionTask motionTask = gestureDetector.getMotionTask(className, coordinates);
+        PostureSequenceDetector.MotionTask motionTask = postureSequenceDetector.getMotionTask(className, coordinates);
         Log.d(TAG, motionTask.toString());
         // Get the task to perform based on posture
         switch (motionTask) {
             case SWITCH_VOLUME:
-                Integer volumeLevel = gestureDetector.findVolumeLevel(gestureDetector.getCurrentGestureInString());
+                Integer volumeLevel = postureSequenceDetector.findVolumeLevel(postureSequenceDetector.getCurrentGestureInString());
                 switchVolume(volumeLevel);
                 break;
             case SWITCH_VIDEO:
-                switchVideo(gestureDetector.getAnotherHash(gestureDetector.getCurrentGestureInString()));
+                switchVideo(postureSequenceDetector.getAnotherHash(postureSequenceDetector.getCurrentGestureInString()));
                 break;
             case SWITCH_BRIGHTNESS:
                 switchBrightness(
-                        gestureDetector.getBrightnessLevel(gestureDetector.getCurrentGestureInString())
+                        postureSequenceDetector.getBrightnessLevel(postureSequenceDetector.getCurrentGestureInString())
                 );
                 break;
             case ADVANCE_FRAME_RIGHT:
