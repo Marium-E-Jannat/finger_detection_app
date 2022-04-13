@@ -15,10 +15,9 @@ public class OpenAppTaskManager implements TaskManager {
             "https://www.facebook.com/"
     };
 
-    private TaskManager _instance;
+    private static TaskManager _instance;
 
-    @Override
-    public TaskManager getInstance(Context context) {
+    public static TaskManager getInstance(Context context) {
         if (_instance == null) {
             _instance = new OpenAppTaskManager();
         }

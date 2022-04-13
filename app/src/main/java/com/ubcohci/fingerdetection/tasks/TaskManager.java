@@ -23,12 +23,6 @@ public interface TaskManager {
      */
     Map<String, Object> getTask(Map<String, Object> postureConfig);
 
-    /***
-     * Get an singleton instance of classes implementing this interface.
-     * @return An instance of classes implementing this interface.
-     */
-    TaskManager getInstance(Context context);
-
     /**
      * Get the string representation of the current flushed posture buffer.
      * @return String representation of the posture sequence.
