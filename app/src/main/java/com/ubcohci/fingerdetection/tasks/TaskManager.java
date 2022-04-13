@@ -1,5 +1,7 @@
 package com.ubcohci.fingerdetection.tasks;
 
+import android.content.Context;
+
 import java.util.Map;
 
 public interface TaskManager {
@@ -20,4 +22,10 @@ public interface TaskManager {
      * @return A task configuration
      */
     Map<String, Object> getTask(Map<String, Object> postureConfig);
+
+    /***
+     * Get an singleton instance of classes implementing this interface.
+     * @return An instance of classes implementing this interface.
+     */
+    TaskManager getInstance(Context context);
 }
