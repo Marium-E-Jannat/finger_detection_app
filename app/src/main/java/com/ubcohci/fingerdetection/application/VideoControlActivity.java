@@ -13,14 +13,17 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragmentX;
 import com.ubcohci.fingerdetection.BuildConfig;
-import com.ubcohci.fingerdetection.PostureSequenceDetector;
+import com.ubcohci.fingerdetection.detectors.PostureSeqDetector;
 import com.ubcohci.fingerdetection.databinding.ActivityVideoControlBinding;
+import com.ubcohci.fingerdetection.tasks.TaskManager;
+import com.ubcohci.fingerdetection.tasks.VideoControlTaskManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class VideoControlActivity extends BaseActivity implements YouTubePlayer.OnInitializedListener {
 
@@ -34,7 +37,10 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
     private YouTubePlayer player;
 
     // A gesture detector
-    private PostureSequenceDetector postureSequenceDetector;
+    private PostureSeqDetector postureSeqDetector;
+
+    // Task manager
+    private VideoControlTaskManager videoControlTaskManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +53,10 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
         this.graphicOverlay = viewBinding.videoGraphicOverlay;
 
         // Init a gesture detector
-        postureSequenceDetector = new PostureSequenceDetector();
+        postureSeqDetector = new PostureSeqDetector();
+
+        // Init a task manager
+        videoControlTaskManager = (VideoControlTaskManager) VideoControlTaskManager.getInstance(this);
 
         // Init youtube API
         initYoutubeAPI();
@@ -115,29 +124,37 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
         coordinates.put("left", data.getInt("x_min"));
         coordinates.put("right", data.getInt("x_max"));
 
-        PostureSequenceDetector.MotionTask motionTask = postureSequenceDetector.getMotionTask(className, coordinates);
-        Log.d(TAG, motionTask.toString());
+        final String[] motion = postureSeqDetector.getMotion(className, coordinates);
+
+        if (motion.length < 1) { // Do nothing if there is detected motion yet
+            return;
+        }
+
+        // Construct a posture configuration
+        Map<String, Object> postureConfig = new HashMap<>();
+        postureConfig.put("postures", motion);
+
+        // Get the motion task
+        Map<String, Object> motionTask = videoControlTaskManager.getTask(postureConfig);
+
+        // Get the task
+        TaskManager.MotionTask task = (TaskManager.MotionTask) Objects.requireNonNull(motionTask.get("task"));
+
         // Get the task to perform based on posture
-        switch (motionTask) {
+        switch (task) {
             case SWITCH_VOLUME:
-                Integer volumeLevel = postureSequenceDetector.findVolumeLevel(postureSequenceDetector.getCurrentGestureInString());
-                switchVolume(volumeLevel);
-                break;
-            case SWITCH_VIDEO:
-                switchVideo(postureSequenceDetector.getAnotherHash(postureSequenceDetector.getCurrentGestureInString()));
+                switchVolume((Integer) Objects.requireNonNull(motionTask.get("volume")));
                 break;
             case SWITCH_BRIGHTNESS:
-                switchBrightness(
-                        postureSequenceDetector.getBrightnessLevel(postureSequenceDetector.getCurrentGestureInString())
-                );
+                switchBrightness((Integer) Objects.requireNonNull(motionTask.get("brightness")));
                 break;
-            case ADVANCE_FRAME_RIGHT:
-                advanceVideoFrame(true); break;
-            case ADVANCE_FRAME_LEFT:
-                advanceVideoFrame(false); break;
-            case WAITING:
-            case NONE:
-            default: break;// Do nothing if there is no posture detected
+            case SWITCH_VIDEO:
+                switchVideo((String) Objects.requireNonNull(motionTask.get("url")));
+                break;
+            case SWITCH_VIDEO_FRAME:
+                // TODO: Call switch video frame
+                break;
+            default:
         }
     }
 
