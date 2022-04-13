@@ -1,8 +1,8 @@
 package com.ubcohci.fingerdetection.tasks;
 
 import android.content.Context;
-
 import java.util.Map;
+import java.util.List;
 
 public interface TaskManager {
     // An enum define all possible task for each detection result
@@ -28,4 +28,19 @@ public interface TaskManager {
      * @return An instance of classes implementing this interface.
      */
     TaskManager getInstance(Context context);
+
+    /**
+     * Get the string representation of the current flushed posture buffer.
+     * @return String representation of the posture sequence.
+     */
+    static String getPostureSeqToString(List<String> postures) {
+        final StringBuilder stringBuilder = new StringBuilder();
+        String delimiter = "";
+        for (String s: postures) {
+            stringBuilder.append(delimiter);
+            stringBuilder.append(s);
+            delimiter = "_";
+        }
+        return stringBuilder.toString();
+    }
 }
