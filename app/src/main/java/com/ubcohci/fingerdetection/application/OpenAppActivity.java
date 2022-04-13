@@ -74,7 +74,7 @@ public class OpenAppActivity extends BaseActivity {
 
         // Construct a posture configuration
         Map<String, Object> postureConfig = new HashMap<>();
-        postureConfig.put("postures", Arrays.asList(motion));
+        postureConfig.put("postures", motion);
 
         // Get the motion task
         Map<String, Object> motionTask = openAppTaskManager.getTask(postureConfig);
