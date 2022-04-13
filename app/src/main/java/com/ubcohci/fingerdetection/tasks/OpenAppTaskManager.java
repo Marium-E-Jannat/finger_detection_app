@@ -1,5 +1,7 @@
 package com.ubcohci.fingerdetection.tasks;
 
+import android.content.Context;
+
 import com.ubcohci.fingerdetection.detectors.BaseDetector;
 
 import java.util.HashMap;
@@ -12,6 +14,18 @@ public class OpenAppTaskManager implements TaskManager {
             "https://www.youtube.com/",
             "https://www.facebook.com/"
     };
+
+    private TaskManager _instance;
+
+    @Override
+    public TaskManager getInstance(Context context) {
+        if (_instance == null) {
+            _instance = new OpenAppTaskManager();
+        }
+        return _instance;
+    }
+
+    private OpenAppTaskManager() {}
 
     @Override
     public Map<String, Object> getTask(Map<String, Object> postureConfig) {
