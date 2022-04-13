@@ -31,7 +31,7 @@ public class PostureSeqDetector implements BaseDetector {
 
     @SuppressWarnings("unused")
     @Override
-    public String[] getMotionTask(@NonNull String posture, @NonNull Map<String, Integer> coordinates) {
+    public String[] getMotion(@NonNull String posture, @NonNull Map<String, Integer> coordinates) {
         String[] postureSeq;
         if (isPostureExist(posture)) { // If the posture exists
             addToBuffer(posture); // Add the new posture to buffer
