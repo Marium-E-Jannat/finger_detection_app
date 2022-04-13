@@ -124,15 +124,7 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
         coordinates.put("left", data.getInt("x_min"));
         coordinates.put("right", data.getInt("x_max"));
 
-        final String[] motion = postureSeqDetector.getMotion(className, coordinates);
-
-        if (motion.length < 1) { // Do nothing if there is detected motion yet
-            return;
-        }
-
-        // Construct a posture configuration
-        Map<String, Object> postureConfig = new HashMap<>();
-        postureConfig.put("postures", motion);
+        final Map<String, Object> postureConfig = postureSeqDetector.getMotion(className, coordinates);
 
         // Get the motion task
         Map<String, Object> motionTask = videoControlTaskManager.getTask(postureConfig);

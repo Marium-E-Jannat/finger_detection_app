@@ -65,16 +65,8 @@ public class OpenAppActivity extends BaseActivity {
         coordinates.put("left", data.getInt("x_min"));
         coordinates.put("right", data.getInt("x_max"));
 
-        // Get motion
-        final String[] motion = postureSeqDetector.getMotion(className, coordinates);
-
-        if (motion.length < 1) { // Do nothing if there is detected motion yet
-            return;
-        }
-
-        // Construct a posture configuration
-        Map<String, Object> postureConfig = new HashMap<>();
-        postureConfig.put("postures", motion);
+        // Get motion configurations
+        final Map<String, Object> postureConfig = postureSeqDetector.getMotion(className, coordinates);
 
         // Get the motion task
         Map<String, Object> motionTask = openAppTaskManager.getTask(postureConfig);

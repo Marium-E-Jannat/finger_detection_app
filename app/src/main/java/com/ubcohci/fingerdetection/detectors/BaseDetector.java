@@ -11,9 +11,10 @@ public interface BaseDetector {
     };
 
     /**
-     * Get the task to perform based on the current posture.
-     * @param posture The class name of the current posture (exists or not exists)
-     * @return A enum representing a task.
+     * Get a motion configurations
+     * @param posture The current detected posture.
+     * @param coordinates The bounding box of the current posture.
+     * @return The motion configurations in map: {"postures": [], ...}
      */
-    String[] getMotion(@NonNull String posture, @NonNull Map<String, Integer> coordinates);
+    Map<String, Object> getMotion(@NonNull String posture, @NonNull Map<String, Integer> coordinates);
 }

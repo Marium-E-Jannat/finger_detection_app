@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public class PostureSeqDetector implements BaseDetector {
 
     @SuppressWarnings("unused")
     @Override
-    public String[] getMotion(@NonNull String posture, @NonNull Map<String, Integer> coordinates) {
+    public Map<String, Object> getMotion(@NonNull String posture, @NonNull Map<String, Integer> coordinates) {
         String[] postureSeq;
         if (isPostureExist(posture)) { // If the posture exists
             addToBuffer(posture); // Add the new posture to buffer
@@ -54,7 +55,9 @@ public class PostureSeqDetector implements BaseDetector {
             }
         }
         Log.d(TAG, "Posture Sequence: " + Arrays.toString(postureSeq));
-        return postureSeq;
+        Map<String, Object> postureConfig = new HashMap<>();
+        postureConfig.put("postures", postureSeq);
+        return postureConfig;
     }
 
     /**
