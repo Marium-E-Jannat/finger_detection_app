@@ -3,28 +3,29 @@ package com.ubcohci.fingerdetection.application;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.ubcohci.fingerdetection.PostureSequenceDetector;
+import com.ubcohci.fingerdetection.detectors.PostureSeqDetector;
 import com.ubcohci.fingerdetection.databinding.ActivityOpenAppBinding;
+import com.ubcohci.fingerdetection.tasks.OpenAppTaskManager;
+import com.ubcohci.fingerdetection.tasks.TaskManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class OpenAppActivity extends BaseActivity {
-
-    // URLS to switch web views
-    private static final String[] urls = {
-            "https://www.youtube.com/",
-            "https://www.facebook.com/"
-    };
 
     // View binding
     private ActivityOpenAppBinding viewBinding;
 
     // Gesture detector
-    private PostureSequenceDetector postureSequenceDetector;
+    private PostureSeqDetector postureSeqDetector;
+
+    // Task manager
+    private OpenAppTaskManager openAppTaskManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,10 @@ public class OpenAppActivity extends BaseActivity {
         this.graphicOverlay = viewBinding.webviewOverlay;
 
         // Init a gesture detector
-        postureSequenceDetector = new PostureSequenceDetector();
+        postureSeqDetector = new PostureSeqDetector();
+
+        // Init a task manager
+        openAppTaskManager = (OpenAppTaskManager) OpenAppTaskManager.getInstance(this);
 
         // Start camera
         if (permissionManager.isAllPermissionsGranted()) {
@@ -61,13 +65,24 @@ public class OpenAppActivity extends BaseActivity {
         coordinates.put("left", data.getInt("x_min"));
         coordinates.put("right", data.getInt("x_max"));
 
-        PostureSequenceDetector.MotionTask motionTask = postureSequenceDetector.getMotionTask(className, coordinates);
-        Log.d(TAG, motionTask.toString());
+        // Get motion
+        final String[] motion = postureSeqDetector.getMotion(className, coordinates);
 
-        if (motionTask == PostureSequenceDetector.MotionTask.SWITCH_VOLUME) {
-            // Get which volume mapping (10->facebook, 20->youtube)
-            int volumeLevel = postureSequenceDetector.findVolumeLevel(postureSequenceDetector.getCurrentGestureInString());
-            String url = urls[volumeLevel == 10? 0:1];
+        if (motion.length < 1) { // Do nothing if there is detected motion yet
+            return;
+        }
+
+        // Construct a posture configuration
+        Map<String, Object> postureConfig = new HashMap<>();
+        postureConfig.put("postures", Arrays.asList(motion));
+
+        // Get the motion task
+        Map<String, Object> motionTask = openAppTaskManager.getTask(postureConfig);
+
+        // Get the task
+        TaskManager.MotionTask task = (TaskManager.MotionTask) Objects.requireNonNull(motionTask.get("task"));
+        if (task == TaskManager.MotionTask.OPEN_APP) {
+            String url = (String) Objects.requireNonNull(motionTask.get("url"));
             viewBinding.webView.loadUrl(url);
         }
     }
