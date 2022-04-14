@@ -45,7 +45,7 @@ public class OpenAppTaskManager implements TaskManager {
             // Check posture
             if (posture.equals(BaseDetector.postures[0])) {
                 taskConfig.put("url", urls[0]);
-            } else if ((posture.equals(BaseDetector.postures[1]))) {
+            } else if (posture.equals(BaseDetector.postures[1])) {
                 taskConfig.put("url", urls[1]);
             } else {
                 task = MotionTask.NONE;

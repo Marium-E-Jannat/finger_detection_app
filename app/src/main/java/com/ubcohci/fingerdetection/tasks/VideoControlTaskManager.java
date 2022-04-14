@@ -96,7 +96,15 @@ public class VideoControlTaskManager implements TaskManager {
                 } else {
                     // One is for volume
                     task = MotionTask.SWITCH_VOLUME;
-                    taskConfig.put("volume", postureToVolume.get(posture));
+
+                    // Try to get volume level
+                    Integer volumeLevel = postureToVolume.get(posture);
+
+                    if (volumeLevel == null) {
+                        task = MotionTask.NONE;
+                    } else {
+                        taskConfig.put("volume", volumeLevel);
+                    }
                 }
                 break;
             case 2:
