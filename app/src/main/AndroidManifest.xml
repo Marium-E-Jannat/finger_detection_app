@@ -31,6 +31,10 @@
             android:name=".application.VideoControlActivity">
         </activity>
         <activity
+            android:hardwareAccelerated="true"
+            android:name=".application.ImageBrowsingActivity">
+        </activity>
+        <activity
             android:name=".LaunchActivity"
             android:exported="true">
             <intent-filter>
