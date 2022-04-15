@@ -11,18 +11,23 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.ubcohci.fingerdetection.databinding.ActivityImageBrowingBinding;
 import com.ubcohci.fingerdetection.detectors.GestureDetector;
 import com.ubcohci.fingerdetection.fragments.ImageSlidePageFragment;
+import com.ubcohci.fingerdetection.tasks.ImageBrowsingTaskManager;
+import com.ubcohci.fingerdetection.tasks.TaskManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ImageBrowsingActivity extends BaseActivity {
 
     private ActivityImageBrowingBinding viewBinding;
 
     private GestureDetector gestureDetector;
+
+    private ImageBrowsingTaskManager imageBrowsingTaskManager;
 
     private ViewPager2 imagePager;
 
@@ -44,6 +49,9 @@ public class ImageBrowsingActivity extends BaseActivity {
 
         // Initialize a gesture detector
         gestureDetector = new GestureDetector();
+
+        // Add a task manager
+        imageBrowsingTaskManager = new ImageBrowsingTaskManager(ImageBrowsingActivity.imageURLs.length);
 
         // Set pager
         imagePager = viewBinding.imagePager;
@@ -73,14 +81,18 @@ public class ImageBrowsingActivity extends BaseActivity {
         coordinates.put("right", data.getInt("x_max"));
 
         // Put through the detector
-        final Map<String, Object> gesture = gestureDetector.getMotion(className, coordinates);
+        final Map<String, Object> gestureConfig = gestureDetector.getMotion(className, coordinates);
 
         // Get the task configuration
-        final Map<String, Object> taskConfig = null;
+        final Map<String, Object> taskConfig = imageBrowsingTaskManager.getTask(gestureConfig);
 
-        // TODO: Add PageManager
+        // Check if slidePager should be called
+        final TaskManager.MotionTask task = (TaskManager.MotionTask) Objects.requireNonNull(taskConfig.get("task"));
 
-        // TODO: Check if slidePager should be called
+        if (task == TaskManager.MotionTask.SLIDE_PAGE) {
+            int index = (Integer) Objects.requireNonNull(taskConfig.get("index"));
+            slidePager(index);
+        }
     }
 
     /**
