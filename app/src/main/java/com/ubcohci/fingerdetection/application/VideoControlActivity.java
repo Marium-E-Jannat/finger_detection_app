@@ -63,7 +63,7 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
 
         // Start camera
         if (permissionManager.isAllPermissionsGranted()) {
-            cameraSource.startCamera();
+            singleCameraSource.startCamera();
         } else {
             permissionManager.getRuntimePermissions();
         }

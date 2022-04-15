@@ -1,7 +1,6 @@
 package com.ubcohci.fingerdetection.application;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.ubcohci.fingerdetection.detectors.PostureSeqDetector;
 import com.ubcohci.fingerdetection.databinding.ActivityOpenAppBinding;
@@ -11,7 +10,6 @@ import com.ubcohci.fingerdetection.tasks.TaskManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -46,7 +44,7 @@ public class OpenAppActivity extends BaseActivity {
 
         // Start camera
         if (permissionManager.isAllPermissionsGranted()) {
-            cameraSource.startCamera();
+            singleCameraSource.startCamera();
         } else {
             permissionManager.getRuntimePermissions();
         }

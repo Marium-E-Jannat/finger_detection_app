@@ -27,7 +27,7 @@ public class MainActivity extends BaseActivity {
         graphicOverlay = viewBinding.graphicOverlay;
 
         if (permissionManager.isAllPermissionsGranted()) {
-            cameraSource.startCamera();
+            singleCameraSource.startCamera();
         } else {
             permissionManager.getRuntimePermissions();
         }

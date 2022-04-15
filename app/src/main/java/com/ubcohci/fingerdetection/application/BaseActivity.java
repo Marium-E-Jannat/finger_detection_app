@@ -16,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ubcohci.fingerdetection.InferenceTracker;
 import com.ubcohci.fingerdetection.PermissionManager;
-import com.ubcohci.fingerdetection.camera.CameraSource;
+import com.ubcohci.fingerdetection.camera.SingleCameraSource;
 import com.ubcohci.fingerdetection.camera.CameraUtils;
 import com.ubcohci.fingerdetection.graphics.DetectionGraphic;
 import com.ubcohci.fingerdetection.graphics.GraphicOverlay;
@@ -34,7 +34,7 @@ import java.util.Objects;
 
 public class BaseActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback,
-        CameraSource.AnalyzerListener,
+        SingleCameraSource.AnalyzerListener,
         HttpClient.ResultHandler,
         ValueEventListener {
     // Tags and request codes
@@ -44,7 +44,7 @@ public class BaseActivity extends AppCompatActivity
     protected GraphicOverlay graphicOverlay;
 
     // Camera configuration
-    protected CameraSource cameraSource;
+    protected SingleCameraSource singleCameraSource;
 
     // Permission manager
     protected PermissionManager permissionManager;
@@ -76,7 +76,7 @@ public class BaseActivity extends AppCompatActivity
 
         showDebug = getIntent().getBooleanExtra("showDebug", false);
 
-        cameraSource = new CameraSource(TAG,this, this);
+        singleCameraSource = new SingleCameraSource(TAG,this, this);
 
         // Check for permissions
         permissionManager = new PermissionManager(TAG,this, PERMISSION_REQUESTS);
@@ -126,7 +126,7 @@ public class BaseActivity extends AppCompatActivity
         this.httpClient.dispose();
         mDatabase.child("url").removeEventListener(this);
         super.onDestroy();
-        cameraSource.release();
+        singleCameraSource.release();
     }
 
     @Override

@@ -59,7 +59,7 @@ public class ImageBrowsingActivity extends BaseActivity {
         imagePager.setAdapter(pageAdapter);
 
         if (permissionManager.isAllPermissionsGranted()) {
-            cameraSource.startCamera();
+            singleCameraSource.startCamera();
         } else {
             permissionManager.getRuntimePermissions();
         }
