@@ -32,6 +32,7 @@ public class ImageSlidePageFragment extends Fragment {
         // Load image
         Glide.with(this)
                 .load(this.imageURL)
+                .placeholder(R.drawable.image_place_holder)
                 .into((ImageView) view.findViewById(R.id.browsedImage));
         return view;
     }
