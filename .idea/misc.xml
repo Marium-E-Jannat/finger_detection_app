@@ -7,6 +7,7 @@
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.175" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.175" />
         <entry key="app/src/main/res/drawable/image_loading.xml" value="0.204" />
+        <entry key="app/src/main/res/drawable/image_place_holder.xml" value="0.204" />
         <entry key="app/src/main/res/layout/activity_image_browing.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/activity_launch.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25181159420289856" />
