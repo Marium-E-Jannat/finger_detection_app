@@ -12,7 +12,7 @@ public interface TaskManager {
         SWITCH_BRIGHTNESS,
         SWITCH_VIDEO_FRAME,
         OPEN_APP,
-        WAITING,
+        SLIDE_PAGE,
         NONE
     }
 
