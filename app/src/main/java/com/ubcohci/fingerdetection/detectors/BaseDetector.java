@@ -17,4 +17,14 @@ public interface BaseDetector {
      * @return The motion configurations in map: {"postures": [], ...}
      */
     Map<String, Object> getMotion(@NonNull String posture, @NonNull Map<String, Integer> coordinates);
+
+    /**
+     * Initialize the detector.
+     */
+    void initialize();
+
+    /**
+     * Dispose the detector.
+     */
+    void dispose();
 }

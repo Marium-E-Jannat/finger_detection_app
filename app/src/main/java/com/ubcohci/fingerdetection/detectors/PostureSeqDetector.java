@@ -4,31 +4,54 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A utility class to buffer and detect posture/gesture.
  */
-public class PostureSeqDetector implements BaseDetector {
+public class PostureSeqDetector implements BaseDetector, ValueEventListener {
     private static final String TAG = "GestureDetector";
 
     // A buffer to check for a gesture
     private final List<String> gestureBuffer = new ArrayList<>();
 
     // Max value of tolerant count
-    private static final int maxTolerantCount = 0;
+    private int maxTolerance;
 
     // A tolerance count
-    private int toleranceCount = 1;
+    private int toleranceCount = 0;
+
+    // Ref to database
+    private DatabaseReference mDatabase;
 
     /**
      * Constructor
      */
-    public PostureSeqDetector() {}
+    public PostureSeqDetector() {
+        initialize();
+    }
+
+    @Override
+    public void initialize() {
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("maxTolerance").addValueEventListener(this);
+    }
+
+    @Override
+    public void dispose() {
+        mDatabase.child("maxTolerance").removeEventListener(this);
+    }
 
     @SuppressWarnings("unused")
     @Override
@@ -41,7 +64,7 @@ public class PostureSeqDetector implements BaseDetector {
             toleranceCount = 0;
         } else { // Server cannot recognize a posture
             // Check tolerance count
-            if (toleranceCount < maxTolerantCount) {
+            if (toleranceCount < maxTolerance) {
                 toleranceCount++;
                 postureSeq = new String[0];
             } else {
@@ -86,5 +109,15 @@ public class PostureSeqDetector implements BaseDetector {
         if (gestureBuffer.isEmpty() || !gestureBuffer.get(gestureBuffer.size() - 1).equals(posture)) {
             gestureBuffer.add(posture);
         }
+    }
+
+    @Override
+    public void onDataChange(@NonNull DataSnapshot snapshot) {
+        maxTolerance = (Integer) Objects.requireNonNull(snapshot.getValue());
+    }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError error) {
+        Log.e(TAG, error.toString());
     }
 }
