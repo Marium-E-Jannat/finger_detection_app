@@ -67,6 +67,9 @@ public class VideoControlActivityV2 extends BaseActivity implements YouTubePlaye
         // Init youtube API
         initYoutubeAPI();
 
+        // Set timeout to 500s
+        setTimeOut(500);
+
         // Start camera
         if (permissionManager.isAllPermissionsGranted()) {
             multiCameraSource.startCamera();
