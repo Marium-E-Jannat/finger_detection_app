@@ -3,17 +3,14 @@ package com.ubcohci.fingerdetection.camera;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
-import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.ubcohci.fingerdetection.MainActivity;
 
 public class SingleCameraSource implements CameraSource{
     // TAGs
@@ -32,7 +29,7 @@ public class SingleCameraSource implements CameraSource{
      * @param context The owner (must be instance of LifecycleOwner)
      */
     public SingleCameraSource(String tag, Context context, AnalyzerListener imageHandler) {
-        this.TAG = "CameraSource_" + tag;
+        this.TAG = "SingleCameraSource_" + tag;
         this.context = context;
         this.imageHandler = imageHandler;
     }
