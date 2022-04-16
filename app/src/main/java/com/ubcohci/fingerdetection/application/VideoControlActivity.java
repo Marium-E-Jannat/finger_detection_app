@@ -15,6 +15,7 @@ import com.google.android.youtube.player.YouTubePlayerSupportFragmentX;
 import com.ubcohci.fingerdetection.BuildConfig;
 import com.ubcohci.fingerdetection.detectors.PostureSeqDetector;
 import com.ubcohci.fingerdetection.databinding.ActivityVideoControlBinding;
+import com.ubcohci.fingerdetection.tasks.TaskExecutor;
 import com.ubcohci.fingerdetection.tasks.TaskManager;
 import com.ubcohci.fingerdetection.tasks.VideoControlTaskManager;
 
@@ -135,53 +136,18 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
         // Get the task to perform based on posture
         switch (task) {
             case SWITCH_VOLUME:
-                switchVolume((Integer) Objects.requireNonNull(motionTask.get("volume")));
+                TaskExecutor.switchVolume(this, (Integer) Objects.requireNonNull(motionTask.get("volume")));
                 break;
             case SWITCH_BRIGHTNESS:
-                switchBrightness((Integer) Objects.requireNonNull(motionTask.get("brightness")));
+                TaskExecutor.switchBrightness(this, (Integer) Objects.requireNonNull(motionTask.get("brightness")));
                 break;
             case SWITCH_VIDEO:
-                switchVideo((String) Objects.requireNonNull(motionTask.get("url")));
+                TaskExecutor.switchVideo(this.player, (String) Objects.requireNonNull(motionTask.get("url")));
                 break;
             case SWITCH_VIDEO_FRAME:
                 // TODO: Call switch video frame
                 break;
             default:
         }
-    }
-
-    public void switchVolume(int volumeLevel) {
-        Log.d(TAG, "Setting volume to " + volumeLevel);
-
-        // Use audio service to change volume
-        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
-        if (audioManager.isVolumeFixed()) {
-            Toast.makeText(this, "Volume is in fixed mode!", Toast.LENGTH_SHORT).show();
-        } else {
-            audioManager.setStreamVolume(
-                    AudioManager.STREAM_MUSIC,
-                    volumeLevel,
-                    AudioManager.FLAG_SHOW_UI
-            );
-        }
-    }
-
-    public void switchVideo(@NonNull String newHash) {
-        this.player.loadVideo(newHash);
-    }
-
-    public void switchBrightness(int brightness) {
-        Log.d(TAG, "Brightness change to: " + brightness);
-
-        // Set current screen brightness
-        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-        layoutParams.screenBrightness = brightness / 100f;
-        getWindow().setAttributes(layoutParams);
-    }
-
-    public void advanceVideoFrame(boolean forward) {
-        if (this.player == null) return;
-        this.player.seekRelativeMillis(forward? 2000: -2000);
     }
 }
