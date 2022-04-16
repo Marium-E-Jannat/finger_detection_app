@@ -51,23 +51,25 @@ public class MultiCameraSource implements CameraSource {
                         // Unbind all cases
                         cameraProvider.unbindAll();
 
+                        CameraSelector frontSelector = CameraSelector.DEFAULT_FRONT_CAMERA;
                         // Set up for front camera analyzer
                         ImageAnalysis frontAnalysis = new ImageAnalysis.Builder().build();
                         frontAnalysis.setAnalyzer(
                                 ActivityCompat.getMainExecutor(this.context),
-                                new Analyzer(frontListener)
+                                new Analyzer(frontListener, frontSelector)
                         );
 
-                        CameraSelector frontSelector = CameraSelector.DEFAULT_FRONT_CAMERA;
 
+
+                        CameraSelector backSelector = CameraSelector.DEFAULT_BACK_CAMERA;
                         // Set up for back camera analyzer
                         ImageAnalysis backAnalysis = new ImageAnalysis.Builder().build();
                         backAnalysis.setAnalyzer(
                                 ActivityCompat.getMainExecutor(this.context),
-                                new Analyzer(backListener)
+                                new Analyzer(backListener, backSelector)
                         );
 
-                        CameraSelector backSelector = CameraSelector.DEFAULT_BACK_CAMERA;
+
 
                         // Bind cases
                         cameraProvider.bindToLifecycle(

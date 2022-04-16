@@ -3,6 +3,7 @@ package com.ubcohci.fingerdetection.camera;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
@@ -39,16 +40,18 @@ public interface CameraSource {
      */
     final class Analyzer implements ImageAnalysis.Analyzer {
         private final AnalyzerListener listener;
-        public Analyzer(AnalyzerListener listener) {
+        private final CameraSelector cameraSelector;
+        public Analyzer(AnalyzerListener listener, CameraSelector cameraSelector) {
             this.listener = listener;
+            this.cameraSelector = cameraSelector;
         }
         @Override
         public void analyze(@NonNull ImageProxy image) {
-            listener.handle(image); // Run a separate thread pool (cameraExecutor)
+            listener.handle(image, cameraSelector); // Run a separate thread pool (cameraExecutor)
         }
     }
 
     interface AnalyzerListener {
-        void handle(@NonNull ImageProxy image);
+        void handle(@NonNull ImageProxy image, CameraSelector cameraSelector);
     }
 }

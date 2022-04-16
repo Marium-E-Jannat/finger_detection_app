@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageProxy;
 import androidx.core.app.ActivityCompat;
 
@@ -70,6 +71,9 @@ public class BaseActivity extends AppCompatActivity
     private long lastSentTimeMarker;
 
     protected int timeOut = 1000; // Default 1000 ms
+
+    // Keep a holder of current camera selector
+    protected CameraSelector cameraSelector;
 
 
     @Override
@@ -136,7 +140,7 @@ public class BaseActivity extends AppCompatActivity
     }
 
     @Override
-    public void handle(@NonNull ImageProxy image) {
+    public void handle(@NonNull ImageProxy image, @NonNull CameraSelector cameraSelector) {
         this.currentFrame = image;
         try {
             final long now = System.currentTimeMillis();
@@ -159,6 +163,7 @@ public class BaseActivity extends AppCompatActivity
             );
 
             lastSentTimeMarker = now;
+            this.cameraSelector = cameraSelector;
         } catch (IOException e) {
             Log.d(TAG, e.getMessage());
             image.close(); // Close the image
@@ -193,6 +198,8 @@ public class BaseActivity extends AppCompatActivity
                 )));
             }
 
+            // Add camera selector in
+            jsonObject.put("camera_selector", this.cameraSelector);
             // Handle app-specific tasks
             handleAppTask(jsonObject);
         } catch (JSONException | ClassCastException e) {

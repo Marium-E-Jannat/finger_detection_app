@@ -62,7 +62,7 @@ public class SingleCameraSource implements CameraSource{
                         ImageAnalysis imageAnalysis = new ImageAnalysis.Builder().build();
                         imageAnalysis.setAnalyzer(
                                 ActivityCompat.getMainExecutor(this.context),
-                                new Analyzer(imageHandler)
+                                new Analyzer(imageHandler, selector)
                         );
 
                         // Unbind use cases before rebinding
