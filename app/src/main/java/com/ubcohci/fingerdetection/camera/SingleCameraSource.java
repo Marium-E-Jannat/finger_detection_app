@@ -10,17 +10,12 @@ import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.ubcohci.fingerdetection.MainActivity;
-import com.ubcohci.fingerdetection.application.VideoControlActivity;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-public class CameraSource {
+public class SingleCameraSource implements CameraSource{
     // TAGs
     private final String TAG;
 
@@ -36,7 +31,7 @@ public class CameraSource {
      * @param tag TAG of the owner.
      * @param context The owner (must be instance of LifecycleOwner)
      */
-    public CameraSource(String tag, Context context, AnalyzerListener imageHandler) {
+    public SingleCameraSource(String tag, Context context, AnalyzerListener imageHandler) {
         this.TAG = "CameraSource_" + tag;
         this.context = context;
         this.imageHandler = imageHandler;
@@ -46,6 +41,7 @@ public class CameraSource {
      * Start camera.
      * Currently only supports MainActivity.
      */
+    @Override
     public void startCamera() {
         cameraProviderFuture = ProcessCameraProvider.getInstance(this.context);
         cameraProviderFuture.addListener(
@@ -98,31 +94,6 @@ public class CameraSource {
         );
     }
 
-    public void release() { }
-
-    private Preview.SurfaceProvider getSurfaceProvider(Context context) {
-        Preview.SurfaceProvider surfaceProvider = null;
-        if (context instanceof MainActivity) {
-            surfaceProvider = ((MainActivity) context).viewBinding.viewFinder.getSurfaceProvider();
-        }
-        return surfaceProvider;
-    }
-
-    public interface AnalyzerListener {
-        void handle(@NonNull ImageProxy image);
-    }
-
-    /**
-     * Analyzer to receive image frames.
-     */
-    private static final class Analyzer implements ImageAnalysis.Analyzer {
-        private final AnalyzerListener listener;
-        public Analyzer(AnalyzerListener listener) {
-            this.listener = listener;
-        }
-        @Override
-        public void analyze(@NonNull ImageProxy image) {
-            listener.handle(image); // Run a separate thread pool (cameraExecutor)
-        }
-    }
+    @Override
+    public void releaseCamera() { }
 }
