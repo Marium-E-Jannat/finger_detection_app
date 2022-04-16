@@ -10,6 +10,9 @@ public interface BaseDetector {
         "straight_index", "straight_two", "straight_all", "V", "hook index", "one on bop", "two on bop", "all on bop"
     };
 
+    // The total number of postures
+    int maxNumOfPostures = postures.length;
+
     /**
      * Get a motion configurations
      * @param posture The current detected posture.
