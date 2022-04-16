@@ -69,6 +69,8 @@ public class BaseActivity extends AppCompatActivity
     // Add a tracker from last time an image is sent
     private long lastSentTimeMarker;
 
+    protected int timeOut = 1000; // Default 1000 ms
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +107,10 @@ public class BaseActivity extends AppCompatActivity
         mDatabase.child("url").addValueEventListener(this);
     }
 
+    protected void setTimeOut(int timeOut) {
+        this.timeOut = timeOut;
+    }
+
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
         Object obj = snapshot.getValue();
@@ -134,7 +140,7 @@ public class BaseActivity extends AppCompatActivity
         this.currentFrame = image;
         try {
             final long now = System.currentTimeMillis();
-            if (lastSentTimeMarker > 0 && (now - lastSentTimeMarker) < 1000) {
+            if (lastSentTimeMarker > 0 && (now - lastSentTimeMarker) < timeOut) {
                 image.close();
                 return;
             }
