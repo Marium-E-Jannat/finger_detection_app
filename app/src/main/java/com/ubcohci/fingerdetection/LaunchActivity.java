@@ -30,10 +30,11 @@ public class LaunchActivity extends AppCompatActivity
 
     static {
         appNameToClass.put("Video Control", VideoControlActivity.class);
-        appNameToClass.put("Detection Preview", MainActivity.class);
         appNameToClass.put("Open App", OpenAppActivity.class);
         appNameToClass.put("Image Browsing", ImageBrowsingActivity.class);
         appNameToClass.put("Video Control V2", VideoControlActivityV2.class);
+        appNameToClass.put("Detection Preview", MainActivity.class);
+        appNameToClass.put("Detection Preview V2", MainActivityV2.class);
     }
 
     private String selectedAppName;
