@@ -2,6 +2,8 @@ package com.ubcohci.fingerdetection.application;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageProxy;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleRegistry;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -17,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ubcohci.fingerdetection.InferenceTracker;
+import com.ubcohci.fingerdetection.MainActivityV2;
 import com.ubcohci.fingerdetection.PermissionManager;
 import com.ubcohci.fingerdetection.camera.SingleCameraSource;
 import com.ubcohci.fingerdetection.camera.CameraUtils;
@@ -244,5 +250,57 @@ public class BaseActivity extends AppCompatActivity
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+
+    public static class SecondaryCameraLifeCycle implements LifecycleOwner {
+        private static final String TAG = "SecondaryCameraLifeCycle";
+        private final LifecycleRegistry lifeCycle;
+
+        private final static int timeOut = 1000; // 1000 ms
+
+        private boolean isStop = false;
+
+        public SecondaryCameraLifeCycle() {
+            lifeCycle = new LifecycleRegistry(SecondaryCameraLifeCycle.this);
+        }
+
+        public void setStop() {
+            this.isStop = true;
+        }
+
+        public void enableAlternating() {
+            alternate();
+        }
+
+        private void alternate() {
+            new Handler(Looper.getMainLooper()).postDelayed(
+                    () -> {
+                        Lifecycle.State state = SecondaryCameraLifeCycle.this.lifeCycle.getCurrentState();
+                        Log.d(SecondaryCameraLifeCycle.TAG, "Current state: " + state);
+
+                        switch (state) {
+                            case RESUMED:
+                            case INITIALIZED:
+                                SecondaryCameraLifeCycle.this.lifeCycle.setCurrentState(Lifecycle.State.CREATED);
+                                break;
+                            case CREATED:
+                                SecondaryCameraLifeCycle.this.lifeCycle.setCurrentState(Lifecycle.State.RESUMED);
+                                break;
+                        }
+
+                        if (!SecondaryCameraLifeCycle.this.isStop) {
+                            alternate();
+                        }
+                    },
+                    timeOut
+            );
+        }
+
+        @NonNull
+        @Override
+        public Lifecycle getLifecycle() {
+            return SecondaryCameraLifeCycle.this.lifeCycle;
+        }
     }
 }

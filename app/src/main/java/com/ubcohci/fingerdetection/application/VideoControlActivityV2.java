@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.camera.core.CameraSelector;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -43,6 +44,9 @@ public class VideoControlActivityV2 extends BaseActivity implements YouTubePlaye
     // Use multi-camera video instead
     protected MultiCameraSource multiCameraSource;
 
+    // Secondary owner
+    public LifecycleOwner secondaryLifeCycleOwner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,9 +57,11 @@ public class VideoControlActivityV2 extends BaseActivity implements YouTubePlaye
         // Set graphic overlay
         this.graphicOverlay = viewBinding.videoGraphicOverlay;
 
+        secondaryLifeCycleOwner = new SecondaryCameraLifeCycle();
+
         // Init camera source
         singleCameraSource = null;
-        multiCameraSource = new MultiCameraSource(TAG, this, this,this);
+        multiCameraSource = new MultiCameraSource(TAG, this, secondaryLifeCycleOwner,this,this);
 
         // Init a gesture detector
         frontPostureSeqDetector = new PostureSeqDetector();
@@ -95,6 +101,7 @@ public class VideoControlActivityV2 extends BaseActivity implements YouTubePlaye
         if (player != null) {
             this.player.release();
         }
+        ((SecondaryCameraLifeCycle) secondaryLifeCycleOwner).setStop();
     }
 
     @Override
