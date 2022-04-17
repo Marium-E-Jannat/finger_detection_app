@@ -16,9 +16,11 @@ public class MultiCameraSource implements CameraSource {
     // Log tag
     private final String TAG;
 
-    // Owner
+    // Context
     private final Context context;
-    private final LifecycleOwner secondaryLifeCycleOwner;
+
+    // Lifecycle Owners
+    private final LifecycleOwner backCameraLifeCycleOwner, frontCameraLifeCycleOwner;
 
     // Listeners
     private final AnalyzerListener frontListener;
@@ -31,15 +33,21 @@ public class MultiCameraSource implements CameraSource {
      * Constructor
      * @param tag TAG of the owner.
      * @param context The owner (must be instance of LifecycleOwner)
-     * @param secondaryLifeCycleOwner The secondary lifecycle owner for the back camera
+     * @param frontCameraLifeCycleOwner The lifecycle owner for the front camera
+     * @param backCameraLifeCycleOwner The lifecycle owner for the back camera
      * @param frontListener The image listener for front camera
      * @param backListener The image listener for back camera
      */
     public MultiCameraSource(
-            String tag, Context context, LifecycleOwner secondaryLifeCycleOwner, AnalyzerListener frontListener, AnalyzerListener backListener ) {
+            String tag, Context context,
+            LifecycleOwner frontCameraLifeCycleOwner,
+            LifecycleOwner backCameraLifeCycleOwner,
+            AnalyzerListener frontListener,
+            AnalyzerListener backListener ) {
         TAG = "MultiCameraSource_" + tag;
         this.context = context;
-        this.secondaryLifeCycleOwner = secondaryLifeCycleOwner;
+        this.backCameraLifeCycleOwner = backCameraLifeCycleOwner;
+        this.frontCameraLifeCycleOwner = frontCameraLifeCycleOwner;
         this.frontListener = frontListener;
         this.backListener = backListener;
     }
@@ -80,7 +88,7 @@ public class MultiCameraSource implements CameraSource {
                             Preview frontPreview = new Preview.Builder().build();
                             frontPreview.setSurfaceProvider(surfaceProviders[0]);
                             cameraProvider.bindToLifecycle(
-                                    (LifecycleOwner) this.context,
+                                    this.frontCameraLifeCycleOwner,
                                     frontSelector,
                                     frontPreview,
                                     frontAnalysis
@@ -88,9 +96,9 @@ public class MultiCameraSource implements CameraSource {
 
                             Preview backPreview = new Preview.Builder().build();
                             backPreview.setSurfaceProvider(surfaceProviders[1]);
-                            assert this.secondaryLifeCycleOwner != null;
+                            assert this.backCameraLifeCycleOwner != null;
                             cameraProvider.bindToLifecycle(
-                                    this.secondaryLifeCycleOwner,
+                                    this.backCameraLifeCycleOwner,
                                     backSelector,
                                     backPreview,
                                     backAnalysis
@@ -98,14 +106,14 @@ public class MultiCameraSource implements CameraSource {
                         } else {
                             // Bind cases
                             cameraProvider.bindToLifecycle(
-                                    (LifecycleOwner) this.context,
+                                    this.frontCameraLifeCycleOwner,
                                     frontSelector,
                                     frontAnalysis
                             );
 
-                            assert this.secondaryLifeCycleOwner != null;
+                            assert this.backCameraLifeCycleOwner != null;
                             cameraProvider.bindToLifecycle(
-                                    this.secondaryLifeCycleOwner,
+                                    this.backCameraLifeCycleOwner,
                                     backSelector,
                                     backAnalysis
                             );

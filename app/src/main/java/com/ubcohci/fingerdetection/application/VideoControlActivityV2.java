@@ -61,7 +61,7 @@ public class VideoControlActivityV2 extends BaseActivity implements YouTubePlaye
 
         // Init camera source
         singleCameraSource = null;
-        multiCameraSource = new MultiCameraSource(TAG, this, secondaryLifeCycleOwner,this,this);
+        multiCameraSource = new MultiCameraSource(TAG, this, this, secondaryLifeCycleOwner,this,this);
 
         // Init a gesture detector
         frontPostureSeqDetector = new PostureSeqDetector();

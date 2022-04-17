@@ -40,7 +40,7 @@ public class MainActivityV2 extends BaseActivity {
 
         // Set camera
         this.singleCameraSource = null;
-        this.cameraSource = new MultiCameraSource(TAG, this, secondaryLifeCycleOwner, this, this);
+        this.cameraSource = new MultiCameraSource(TAG, this, this, secondaryLifeCycleOwner, this, this);
 
         if (permissionManager.isAllPermissionsGranted()) {
             cameraSource.startCamera();
