@@ -1,5 +1,6 @@
 package com.ubcohci.fingerdetection.application;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -136,11 +137,15 @@ public class BaseActivity extends AppCompatActivity
         this.httpClient.dispose();
         mDatabase.child("url").removeEventListener(this);
         super.onDestroy();
-        singleCameraSource.releaseCamera();
+        if (singleCameraSource != null) {
+            singleCameraSource.releaseCamera();
+        }
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void handle(@NonNull ImageProxy image, @NonNull CameraSelector cameraSelector) {
+        Log.d(TAG, "Getting image from camera " + (Objects.requireNonNull(cameraSelector.getLensFacing()) == 0? "FRONT" : "BACK"));
         this.currentFrame = image;
         try {
             final long now = System.currentTimeMillis();
