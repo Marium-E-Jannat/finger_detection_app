@@ -11,8 +11,10 @@ import android.widget.CompoundButton;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ubcohci.fingerdetection.application.ImageBrowsingActivity;
 import com.ubcohci.fingerdetection.application.OpenAppActivity;
 import com.ubcohci.fingerdetection.application.VideoControlActivity;
+import com.ubcohci.fingerdetection.application.VideoControlActivityV2;
 import com.ubcohci.fingerdetection.databinding.ActivityLaunchBinding;
 
 import java.util.ArrayList;
@@ -30,6 +32,8 @@ public class LaunchActivity extends AppCompatActivity
         appNameToClass.put("Video Control", VideoControlActivity.class);
         appNameToClass.put("Detection Preview", MainActivity.class);
         appNameToClass.put("Open App", OpenAppActivity.class);
+        appNameToClass.put("Image Browsing", ImageBrowsingActivity.class);
+        appNameToClass.put("Video Control V2", VideoControlActivityV2.class);
     }
 
     private String selectedAppName;
