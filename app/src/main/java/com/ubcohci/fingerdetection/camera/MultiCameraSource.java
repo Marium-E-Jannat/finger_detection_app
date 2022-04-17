@@ -96,7 +96,6 @@ public class MultiCameraSource implements CameraSource {
 
                             Preview backPreview = new Preview.Builder().build();
                             backPreview.setSurfaceProvider(surfaceProviders[1]);
-                            assert this.backCameraLifeCycleOwner != null;
                             cameraProvider.bindToLifecycle(
                                     this.backCameraLifeCycleOwner,
                                     backSelector,
@@ -111,7 +110,6 @@ public class MultiCameraSource implements CameraSource {
                                     frontAnalysis
                             );
 
-                            assert this.backCameraLifeCycleOwner != null;
                             cameraProvider.bindToLifecycle(
                                     this.backCameraLifeCycleOwner,
                                     backSelector,
