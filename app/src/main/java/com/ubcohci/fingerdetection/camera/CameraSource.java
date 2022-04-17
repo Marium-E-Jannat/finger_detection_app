@@ -9,6 +9,7 @@ import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 
 import com.ubcohci.fingerdetection.MainActivity;
+import com.ubcohci.fingerdetection.MainActivityV2;
 
 public interface CameraSource {
     /**
@@ -24,12 +25,19 @@ public interface CameraSource {
     /**
      * Get SurfaceProvider from activity view binding.
      * @param context The owner of the current camera source instance.
-     * @return The SurfaceProvider if there is any else null.
+     * @return An array of SurfaceProviders, where first element is front camera and second is back camera (if any).
      */
-   default Preview.SurfaceProvider getSurfaceProvider(Context context) {
-        Preview.SurfaceProvider surfaceProvider = null;
+   default Preview.SurfaceProvider[] getSurfaceProvider(@NonNull Context context) {
+        Preview.SurfaceProvider[] surfaceProvider = null;
         if (context instanceof MainActivity) {
-            surfaceProvider = ((MainActivity) context).viewBinding.viewFinder.getSurfaceProvider();
+            surfaceProvider = new Preview.SurfaceProvider[] {
+                    ((MainActivity) context).viewBinding.viewFinder.getSurfaceProvider()
+            };
+        } else if (context instanceof MainActivityV2) {
+            surfaceProvider = new Preview.SurfaceProvider[] {
+                    ((MainActivityV2) context).viewBinding.viewFinderFront.getSurfaceProvider(),
+                    ((MainActivityV2) context).viewBinding.viewFinderBack.getSurfaceProvider()
+            };
         }
         return surfaceProvider;
    }
@@ -41,7 +49,7 @@ public interface CameraSource {
     final class Analyzer implements ImageAnalysis.Analyzer {
         private final AnalyzerListener listener;
         private final CameraSelector cameraSelector;
-        public Analyzer(AnalyzerListener listener, CameraSelector cameraSelector) {
+        public Analyzer(@NonNull AnalyzerListener listener, @NonNull CameraSelector cameraSelector) {
             this.listener = listener;
             this.cameraSelector = cameraSelector;
         }
@@ -52,6 +60,6 @@ public interface CameraSource {
     }
 
     interface AnalyzerListener {
-        void handle(@NonNull ImageProxy image, CameraSelector cameraSelector);
+        void handle(@NonNull ImageProxy image, @NonNull CameraSelector cameraSelector);
     }
 }

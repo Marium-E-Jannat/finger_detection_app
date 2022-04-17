@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
+import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.LifecycleOwner;
@@ -59,8 +60,6 @@ public class MultiCameraSource implements CameraSource {
                                 new Analyzer(frontListener, frontSelector)
                         );
 
-
-
                         CameraSelector backSelector = CameraSelector.DEFAULT_BACK_CAMERA;
                         // Set up for back camera analyzer
                         ImageAnalysis backAnalysis = new ImageAnalysis.Builder().build();
@@ -69,20 +68,43 @@ public class MultiCameraSource implements CameraSource {
                                 new Analyzer(backListener, backSelector)
                         );
 
+                        // Get surface providers
+                        Preview.SurfaceProvider[] surfaceProviders = getSurfaceProvider(this.context);
 
+                        if (surfaceProviders != null) {
+                            // Bind cases with preview
+                            Preview frontPreview = new Preview.Builder().build();
+                            frontPreview.setSurfaceProvider(surfaceProviders[0]);
+                            cameraProvider.bindToLifecycle(
+                                    (LifecycleOwner) this.context,
+                                    frontSelector,
+                                    frontPreview,
+                                    frontAnalysis
+                            );
 
-                        // Bind cases
-                        cameraProvider.bindToLifecycle(
-                                (LifecycleOwner) this.context,
-                                frontSelector,
-                                frontAnalysis
-                        );
+                            Preview backPreview = new Preview.Builder().build();
+                            backPreview.setSurfaceProvider(surfaceProviders[1]);
+                            cameraProvider.bindToLifecycle(
+                                    (LifecycleOwner) this.context,
+                                    backSelector,
+                                    backPreview,
+                                    backAnalysis
+                            );
+                        } else {
+                            // Bind cases
+                            cameraProvider.bindToLifecycle(
+                                    (LifecycleOwner) this.context,
+                                    frontSelector,
+                                    frontAnalysis
+                            );
 
-                        cameraProvider.bindToLifecycle(
-                                (LifecycleOwner) this.context,
-                                backSelector,
-                                backAnalysis
-                        );
+                            cameraProvider.bindToLifecycle(
+                                    (LifecycleOwner) this.context,
+                                    backSelector,
+                                    backAnalysis
+                            );
+                        }
+
                     } catch (Exception e) {
                         Log.e(TAG, e.getMessage());
                     }

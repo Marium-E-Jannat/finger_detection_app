@@ -48,12 +48,11 @@ public class SingleCameraSource implements CameraSource{
 
                         // Preview
                         Preview preview =  null;
-                        Preview.SurfaceProvider surfaceProvider = getSurfaceProvider(this.context);
-                        if (surfaceProvider != null) {
+                        Preview.SurfaceProvider[] surfaceProviders = getSurfaceProvider(this.context); // Array of all surface providers
+                        if (surfaceProviders != null) {
                             preview = new Preview.Builder().build();
-                            preview.setSurfaceProvider(surfaceProvider);
+                            preview.setSurfaceProvider(surfaceProviders[0]);
                         }
-
 
                         // Camera selector
                         CameraSelector selector = CameraSelector.DEFAULT_FRONT_CAMERA;
