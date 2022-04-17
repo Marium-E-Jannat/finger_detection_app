@@ -113,7 +113,7 @@ public class PostureSeqDetector implements BaseDetector, ValueEventListener {
 
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
-        maxTolerance = (Integer) Objects.requireNonNull(snapshot.getValue());
+        maxTolerance = ((Long) Objects.requireNonNull(snapshot.getValue())).intValue();
     }
 
     @Override
