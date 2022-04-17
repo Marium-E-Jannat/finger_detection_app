@@ -281,9 +281,9 @@ public class BaseActivity extends AppCompatActivity
 
                         switch (state) {
                             case RESUMED:
-                            case INITIALIZED:
                                 SecondaryCameraLifeCycle.this.lifeCycle.setCurrentState(Lifecycle.State.CREATED);
                                 break;
+                            case INITIALIZED:
                             case CREATED:
                                 SecondaryCameraLifeCycle.this.lifeCycle.setCurrentState(Lifecycle.State.RESUMED);
                                 break;
