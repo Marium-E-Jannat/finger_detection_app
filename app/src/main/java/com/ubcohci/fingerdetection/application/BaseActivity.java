@@ -196,7 +196,8 @@ public class BaseActivity extends AppCompatActivity
             // Get detection information
             DetectionGraphic.DetectionInfo info = new DetectionGraphic.DetectionInfo(
                     jsonObject.getString("class_name"),
-                    String.valueOf(jsonObject.getInt("class_id"))
+                    String.valueOf(jsonObject.getInt("class_id")),
+                    this.cameraSelector
             );
 
             // Draw new overlays with new model results
