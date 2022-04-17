@@ -3,6 +3,7 @@ package com.ubcohci.fingerdetection.tasks;
 import android.content.Context;
 import android.media.AudioManager;
 
+import com.ubcohci.fingerdetection.application.VideoControlActivityV2;
 import com.ubcohci.fingerdetection.detectors.BaseDetector;
 
 import java.util.Arrays;
@@ -22,6 +23,9 @@ public class VideoControlTaskManager implements TaskManager {
 
     private static final int FORWARDS = 0;
     private static final int BACKWARDS = 1;
+
+    // Context
+    private Context context;
 
     // Internal track for the current video
     private int currentIndex = -1;
@@ -45,6 +49,8 @@ public class VideoControlTaskManager implements TaskManager {
     }
 
     private VideoControlTaskManager(Context context) {
+        this.context = context;
+
         // Get audio manager
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
@@ -151,6 +157,11 @@ public class VideoControlTaskManager implements TaskManager {
     }
 
     private boolean isSwitchingVideo(String posture) {
-        return posture.equals(BaseDetector.postures[3]) || posture.equals(BaseDetector.postures[4]);
+        if (context instanceof VideoControlActivityV2) {
+            return posture.equals(BaseDetector.postures[BaseDetector.maxNumOfPostures - 1])
+                    || posture.equals(BaseDetector.postures[BaseDetector.maxNumOfPostures - 2]);
+        } else {
+            return posture.equals(BaseDetector.postures[3]) || posture.equals(BaseDetector.postures[4]);
+        }
     }
 }
