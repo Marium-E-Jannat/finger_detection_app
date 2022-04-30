@@ -28,7 +28,7 @@ public class InferenceTracker {
     public void addNewLatency(long latency) {
         latencySum += latency;
         queue.add(latency);
-        if (queue.size() == queueSize) {
+        if (queue.size() > queueSize) {
             latencySum -= queue.remove(); // Remove the first element
         }
     }
