@@ -60,6 +60,10 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
         // Init a task manager
         videoControlTaskManager = (VideoControlTaskManager) VideoControlTaskManager.getInstance(VideoControlTaskManager.ControlVersion.V1);
 
+        // Get the max volume of music stream
+        AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        TaskResource.maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+
         // Init youtube API
         initYoutubeAPI();
 
@@ -99,10 +103,6 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
         // Play the the first video
         youTubePlayer.loadVideo("HzeK7g8cD0Y");
         youTubePlayer.play();
-
-        // Get the max volume of music stream
-        AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-        TaskResource.maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
     }
 
     @Override
