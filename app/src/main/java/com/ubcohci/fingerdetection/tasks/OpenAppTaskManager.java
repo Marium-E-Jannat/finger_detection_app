@@ -17,7 +17,7 @@ public class OpenAppTaskManager implements TaskManager {
 
     private static TaskManager _instance;
 
-    public static TaskManager getInstance(Context context) {
+    public static TaskManager getInstance() {
         if (_instance == null) {
             _instance = new OpenAppTaskManager();
         }

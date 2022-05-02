@@ -1,5 +1,7 @@
 package com.ubcohci.fingerdetection.tasks;
 
+import com.google.android.gms.tasks.Task;
+import com.ubcohci.fingerdetection.application.ImageBrowsingActivity;
 import com.ubcohci.fingerdetection.detectors.GestureDetector;
 
 import java.util.HashMap;
@@ -13,8 +15,8 @@ public class ImageBrowsingTaskManager implements TaskManager {
     // Current page index
     private int currentIndex = 0;
 
-    public ImageBrowsingTaskManager(int numOfPages) {
-        this.numOfPages = numOfPages;
+    public ImageBrowsingTaskManager() {
+        this.numOfPages = TaskResource.imageURLs.length;
     }
 
     @Override

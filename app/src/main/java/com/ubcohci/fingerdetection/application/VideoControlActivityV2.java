@@ -1,5 +1,7 @@
 package com.ubcohci.fingerdetection.application;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -15,6 +17,7 @@ import com.ubcohci.fingerdetection.databinding.ActivityVideoControlBinding;
 import com.ubcohci.fingerdetection.detectors.PostureSeqDetector;
 import com.ubcohci.fingerdetection.tasks.TaskExecutor;
 import com.ubcohci.fingerdetection.tasks.TaskManager;
+import com.ubcohci.fingerdetection.tasks.TaskResource;
 import com.ubcohci.fingerdetection.tasks.VideoControlTaskManager;
 
 import org.json.JSONException;
@@ -68,7 +71,7 @@ public class VideoControlActivityV2 extends BaseActivity implements YouTubePlaye
         backPostureSeqDetector = new PostureSeqDetector();
 
         // Init a task manager
-        videoControlTaskManager = (VideoControlTaskManager) VideoControlTaskManager.getInstance(this);
+        videoControlTaskManager = (VideoControlTaskManager) VideoControlTaskManager.getInstance(VideoControlTaskManager.ControlVersion.V2);
 
         // Init youtube API
         initYoutubeAPI();
@@ -111,6 +114,10 @@ public class VideoControlActivityV2 extends BaseActivity implements YouTubePlaye
         // Play the the first video
         youTubePlayer.loadVideo("HzeK7g8cD0Y");
         youTubePlayer.play();
+
+        // Get the max volume of music stream
+        AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        TaskResource.maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
     }
 
     @Override

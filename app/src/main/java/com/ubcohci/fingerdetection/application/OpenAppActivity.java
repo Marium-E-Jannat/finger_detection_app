@@ -40,7 +40,7 @@ public class OpenAppActivity extends BaseActivity {
         postureSeqDetector = new PostureSeqDetector();
 
         // Init a task manager
-        openAppTaskManager = (OpenAppTaskManager) OpenAppTaskManager.getInstance(this);
+        openAppTaskManager = (OpenAppTaskManager) OpenAppTaskManager.getInstance();
 
         // Start camera
         if (permissionManager.isAllPermissionsGranted()) {

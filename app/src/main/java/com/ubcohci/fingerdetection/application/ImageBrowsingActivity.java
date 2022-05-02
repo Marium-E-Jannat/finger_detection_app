@@ -13,6 +13,7 @@ import com.ubcohci.fingerdetection.detectors.GestureDetector;
 import com.ubcohci.fingerdetection.fragments.ImageSlidePageFragment;
 import com.ubcohci.fingerdetection.tasks.ImageBrowsingTaskManager;
 import com.ubcohci.fingerdetection.tasks.TaskManager;
+import com.ubcohci.fingerdetection.tasks.TaskResource;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,12 +32,6 @@ public class ImageBrowsingActivity extends BaseActivity {
 
     private ViewPager2 imagePager;
 
-    private static final String[] imageURLs = new String[] {
-            "https://news.ok.ubc.ca/wp-content/uploads/2019/03/housing-770.jpg",
-            "https://finance.cms.ok.ubc.ca/wp-content/uploads/sites/73/2021/04/UBC-Okanagan-Engineering-6-research.jpg",
-            "https://students.cms.ok.ubc.ca/wp-content/uploads/sites/90/2019/05/aerial-campus-okanagan-study-abroad-at-ubc-and-exchange-research-abroad-and-1170-wide.jpg"
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,11 +46,11 @@ public class ImageBrowsingActivity extends BaseActivity {
         gestureDetector = new GestureDetector();
 
         // Add a task manager
-        imageBrowsingTaskManager = new ImageBrowsingTaskManager(ImageBrowsingActivity.imageURLs.length);
+        imageBrowsingTaskManager = new ImageBrowsingTaskManager();
 
         // Set pager
         imagePager = viewBinding.imagePager;
-        FragmentStateAdapter pageAdapter = new ImageSlidePagerAdapter(this, ImageBrowsingActivity.imageURLs);
+        FragmentStateAdapter pageAdapter = new ImageSlidePagerAdapter(this, TaskResource.imageURLs);
         imagePager.setAdapter(pageAdapter);
 
         if (permissionManager.isAllPermissionsGranted()) {

@@ -13,6 +13,9 @@ import java.util.Map;
 import java.util.Objects;
 
 public class VideoControlTaskManager implements TaskManager {
+    public enum ControlVersion {
+        V1, V2
+    }
 
     // A list of possible videos to switch between
     private static final String[] videoHashes = new String[] {
@@ -24,11 +27,11 @@ public class VideoControlTaskManager implements TaskManager {
     private static final int FORWARDS = 0;
     private static final int BACKWARDS = 1;
 
-    // Context
-    private Context context;
-
     // Internal track for the current video
     private int currentIndex = -1;
+
+    // Version of the control activity
+    private ControlVersion version;
 
     // A mapping from posture to volume level
     private final Map<String, Integer> postureToVolume = new HashMap<>();
@@ -41,21 +44,18 @@ public class VideoControlTaskManager implements TaskManager {
 
     private static TaskManager _instance;
 
-    public static TaskManager getInstance(Context context) {
+    public static TaskManager getInstance(ControlVersion version) {
         if (_instance == null) {
-            _instance = new VideoControlTaskManager(context);
+            _instance = new VideoControlTaskManager(version);
         }
         return _instance;
     }
 
-    private VideoControlTaskManager(Context context) {
-        this.context = context;
-
-        // Get audio manager
-        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+    private VideoControlTaskManager(ControlVersion version) {
+        this.version = version;
 
         // Get max audio value
-        int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        int maxVolume = TaskResource.maxVolume;
 
         // Straight index finger to set the sound at 10%
         postureToVolume.put(BaseDetector.postures[0], maxVolume / 10);
@@ -157,7 +157,7 @@ public class VideoControlTaskManager implements TaskManager {
     }
 
     private boolean isSwitchingVideo(String posture) {
-        if (context instanceof VideoControlActivityV2) {
+        if (version == ControlVersion.V2) {
             return posture.equals(BaseDetector.postures[BaseDetector.maxNumOfPostures - 1])
                     || posture.equals(BaseDetector.postures[BaseDetector.maxNumOfPostures - 2]);
         } else {
