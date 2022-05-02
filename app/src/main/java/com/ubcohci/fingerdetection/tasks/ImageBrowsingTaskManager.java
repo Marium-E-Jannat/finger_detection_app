@@ -15,7 +15,17 @@ public class ImageBrowsingTaskManager implements TaskManager {
     // Current page index
     private int currentIndex = 0;
 
-    public ImageBrowsingTaskManager() {
+    // Singleton instance
+    private static ImageBrowsingTaskManager _cached;
+
+    public static ImageBrowsingTaskManager getInstance() {
+        if (_cached == null) {
+            _cached = new ImageBrowsingTaskManager();
+        }
+        return _cached;
+    }
+
+    private ImageBrowsingTaskManager() {
         this.numOfPages = TaskResource.imageURLs.length;
     }
 

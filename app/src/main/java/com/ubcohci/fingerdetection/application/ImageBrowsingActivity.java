@@ -46,7 +46,7 @@ public class ImageBrowsingActivity extends BaseActivity {
         gestureDetector = new GestureDetector();
 
         // Add a task manager
-        imageBrowsingTaskManager = new ImageBrowsingTaskManager();
+        imageBrowsingTaskManager = ImageBrowsingTaskManager.getInstance();
 
         // Set pager
         imagePager = viewBinding.imagePager;
