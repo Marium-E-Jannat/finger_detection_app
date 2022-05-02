@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.youtube.player.internal.ab;
-import com.ubcohci.fingerdetection.application.VideoControlActivity;
 
 public class YouTubePlayerSupportFragmentX extends Fragment implements YouTubePlayer.Provider {
     private final YouTubePlayerSupportFragmentX.a a = new YouTubePlayerSupportFragmentX.a();

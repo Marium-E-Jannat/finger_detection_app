@@ -22,7 +22,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ubcohci.fingerdetection.InferenceTracker;
-import com.ubcohci.fingerdetection.MainActivityV2;
 import com.ubcohci.fingerdetection.PermissionManager;
 import com.ubcohci.fingerdetection.camera.SingleCameraSource;
 import com.ubcohci.fingerdetection.camera.CameraUtils;
@@ -118,16 +117,12 @@ public class BaseActivity extends AppCompatActivity
         mDatabase.child("url").addValueEventListener(this);
     }
 
-    protected void setTimeOut(int timeOut) {
-        this.timeOut = timeOut;
-    }
-
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
         Object obj = snapshot.getValue();
 
         if (obj instanceof String && HttpClient.isHttps((String) obj)) {
-            this.URL = (String)obj + suffix;
+            this.URL = obj + suffix;
         } else {
             Log.d(TAG, "Invalid value at " + snapshot.getRef() + " Value: " + obj);
         }

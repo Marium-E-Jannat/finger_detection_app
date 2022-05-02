@@ -1,9 +1,5 @@
 package com.ubcohci.fingerdetection.tasks;
 
-import android.content.Context;
-import android.media.AudioManager;
-
-import com.ubcohci.fingerdetection.application.VideoControlActivityV2;
 import com.ubcohci.fingerdetection.detectors.BaseDetector;
 
 import java.util.Arrays;

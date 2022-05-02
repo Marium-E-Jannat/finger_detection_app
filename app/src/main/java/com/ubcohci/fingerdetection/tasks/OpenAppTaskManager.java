@@ -1,7 +1,5 @@
 package com.ubcohci.fingerdetection.tasks;
 
-import android.content.Context;
-
 import com.ubcohci.fingerdetection.detectors.BaseDetector;
 
 import java.util.HashMap;

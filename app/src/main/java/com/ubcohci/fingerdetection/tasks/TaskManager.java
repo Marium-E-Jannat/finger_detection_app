@@ -1,6 +1,5 @@
 package com.ubcohci.fingerdetection.tasks;
 
-import android.content.Context;
 import java.util.Map;
 import java.util.List;
 

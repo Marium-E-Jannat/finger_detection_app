@@ -1,7 +1,5 @@
 package com.ubcohci.fingerdetection.tasks;
 
-import com.google.android.gms.tasks.Task;
-import com.ubcohci.fingerdetection.application.ImageBrowsingActivity;
 import com.ubcohci.fingerdetection.detectors.GestureDetector;
 
 import java.util.HashMap;
