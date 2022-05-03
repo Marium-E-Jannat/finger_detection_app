@@ -47,6 +47,7 @@ public class ImageBrowsingActivity extends BaseActivity {
 
         // Add a task manager
         imageBrowsingTaskManager = ImageBrowsingTaskManager.getInstance();
+        imageBrowsingTaskManager.init();
 
         // Set pager
         imagePager = viewBinding.imagePager;

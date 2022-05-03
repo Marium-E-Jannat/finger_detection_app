@@ -41,6 +41,7 @@ public class OpenAppActivity extends BaseActivity {
 
         // Init a task manager
         openAppTaskManager = (OpenAppTaskManager) OpenAppTaskManager.getInstance();
+        openAppTaskManager.init();
 
         // Start camera
         if (permissionManager.isAllPermissionsGranted()) {

@@ -23,6 +23,11 @@ public interface TaskManager {
     Map<String, Object> getTask(Map<String, Object> postureConfig);
 
     /**
+     * Initialize the task manager.
+     */
+    void init();
+
+    /**
      * Get the string representation of the current flushed posture buffer.
      * @return String representation of the posture sequence.
      */

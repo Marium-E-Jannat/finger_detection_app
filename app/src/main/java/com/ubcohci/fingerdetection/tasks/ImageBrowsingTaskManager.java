@@ -11,7 +11,7 @@ public class ImageBrowsingTaskManager implements TaskManager {
     private final int numOfPages;
 
     // Current page index
-    private int currentIndex = 0;
+    private int currentIndex;
 
     // Singleton instance
     private static ImageBrowsingTaskManager _cached;
@@ -54,6 +54,11 @@ public class ImageBrowsingTaskManager implements TaskManager {
         // Add task
         taskConfig.put("task", task);
         return taskConfig;
+    }
+
+    @Override
+    public void init() {
+        this.currentIndex = 0;
     }
 
     private int getNextPageIndex() {

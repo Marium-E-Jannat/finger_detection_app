@@ -54,4 +54,9 @@ public class OpenAppTaskManager implements TaskManager {
         }
         return taskConfig;
     }
+
+    @Override
+    public void init() {
+
+    }
 }

@@ -27,7 +27,7 @@ public class VideoControlTaskManager implements TaskManager {
     private int currentIndex = -1;
 
     // Version of the control activity
-    private ControlVersion version;
+    private final ControlVersion version;
 
     // A mapping from posture to volume level
     private final Map<String, Integer> postureToVolume = new HashMap<>();
@@ -133,6 +133,11 @@ public class VideoControlTaskManager implements TaskManager {
 
         taskConfig.put("task", task);
         return taskConfig;
+    }
+
+    @Override
+    public void init() {
+        currentIndex = -1;
     }
 
     private String getNextHash() {

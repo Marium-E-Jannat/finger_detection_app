@@ -55,6 +55,7 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
 
         // Init a task manager
         videoControlTaskManager = (VideoControlTaskManager) VideoControlTaskManager.getInstance(VideoControlTaskManager.ControlVersion.V1);
+        videoControlTaskManager.init();
 
         // Get the max volume of music stream
         AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
