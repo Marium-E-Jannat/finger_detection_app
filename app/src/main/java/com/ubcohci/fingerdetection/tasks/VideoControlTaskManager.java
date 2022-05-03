@@ -14,14 +14,14 @@ public class VideoControlTaskManager implements TaskManager {
     }
 
     // A list of possible videos to switch between
-    private static final String[] videoHashes = new String[] {
+    public static final String[] videoHashes = new String[] {
             "HzeK7g8cD0Y",
             "UwxatzcYf9Q",
             "-QuVe-hjMs0"
     };
 
-    private static final int FORWARDS = 0;
-    private static final int BACKWARDS = 1;
+    public static final int FORWARDS = 0;
+    public static final int BACKWARDS = 1;
 
     // Internal track for the current video
     private int currentIndex = -1;
@@ -70,11 +70,11 @@ public class VideoControlTaskManager implements TaskManager {
         postureSeqToBrightness.put(
                 String.format(Locale.CANADA, "%s_%s_%s", BaseDetector.postures[2], BaseDetector.postures[4], BaseDetector.postures[2]), 2);
 
-        // V forward
-        postureToDirection.put(BaseDetector.postures[3], FORWARDS);
+        // Last posture if V2 or V for forwards
+        postureToDirection.put(version == ControlVersion.V2? BaseDetector.postures[BaseDetector.maxNumOfPostures - 1] : BaseDetector.postures[3], FORWARDS);
 
-        // Hook backwards
-        postureToDirection.put(BaseDetector.postures[4], BACKWARDS);
+        // Second last posture if V2 or Hook for backwards
+        postureToDirection.put(version == ControlVersion.V2? BaseDetector.postures[BaseDetector.maxNumOfPostures - 2] : BaseDetector.postures[4], BACKWARDS);
     }
 
     @Override
