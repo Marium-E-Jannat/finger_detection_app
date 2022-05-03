@@ -11,6 +11,7 @@ import static org.junit.Assert.fail;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import static com.ubcohci.fingerdetection.tasks.TaskManager.MotionTask;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -18,21 +19,23 @@ import java.util.Map;
 @RunWith(Parameterized.class)
 public class OpenAppTaskManagerUnitTest extends TaskManagerUnitTest {
     public final int[] indexes;
-    public final String url;
+    public final String expectedUrl;
+    public final MotionTask expectedTask;
 
-    public OpenAppTaskManagerUnitTest(int[] indexes, String url) {
+    public OpenAppTaskManagerUnitTest(int[] indexes, String url, MotionTask expectedTask) {
         this.indexes = indexes;
-        this.url = url;
+        this.expectedUrl = url;
+        this.expectedTask = expectedTask;
     }
 
-    @Parameterized.Parameters(name = "Case {index}: [id: {0}, url: {1}]}")
+    @Parameterized.Parameters
     public static Iterable<Object[]> getTestConfig() {
         return Arrays.asList(new Object[][] {
-                {new int[] {0}, OpenAppTaskManager.urls[0]},
-                {new int[] {1}, OpenAppTaskManager.urls[1]},
-                {new int[] {3}, null},
-                {new int[] {1, 2}, null},
-                {new int[] {0, 1}, null}
+                {new int[] {0}, OpenAppTaskManager.urls[0], MotionTask.OPEN_APP},
+                {new int[] {1}, OpenAppTaskManager.urls[1], MotionTask.OPEN_APP},
+                {new int[] {3}, null, MotionTask.NONE},
+                {new int[] {1, 2}, null,  MotionTask.NONE},
+                {new int[] {0, 1}, null, MotionTask.NONE}
         });
     }
 
@@ -61,15 +64,14 @@ public class OpenAppTaskManagerUnitTest extends TaskManagerUnitTest {
         // Check if the return field is in the right format
         assertNotNull(actualTask);
         assertTrue(actualTask instanceof TaskManager.MotionTask);
+        assertEquals(expectedTask, actualTask);
 
-        if (actualTask == TaskManager.MotionTask.NONE) {
+        if (expectedTask == TaskManager.MotionTask.NONE) {
             assertNull(actualUrl);
-        } else if (actualTask == TaskManager.MotionTask.OPEN_APP) {
+        } else if (expectedTask == TaskManager.MotionTask.OPEN_APP) {
             // Check if the url matches expected result
             assertNotNull(actualUrl);
-            assertEquals(this.url, (String) actualUrl);
-        } else {
-            fail("Expected OPEN_APP but given " + actualTask);
+            assertEquals(this.expectedUrl, (String) actualUrl);
         }
     }
 }
