@@ -6,6 +6,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -62,10 +64,12 @@ public class OpenAppTaskManagerUnitTest extends TaskManagerUnitTest {
 
         if (actualTask == TaskManager.MotionTask.NONE) {
             assertNull(actualUrl);
-        } else {
+        } else if (actualTask == TaskManager.MotionTask.OPEN_APP) {
             // Check if the url matches expected result
             assertNotNull(actualUrl);
             assertEquals(this.url, (String) actualUrl);
+        } else {
+            fail("Expected OPEN_APP but given " + actualTask);
         }
     }
 }
