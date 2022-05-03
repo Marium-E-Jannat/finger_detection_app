@@ -42,7 +42,7 @@ public class OpenAppTaskManagerUnitTest extends TaskManagerUnitTest {
     @Test
     public void openAppTest() {
         // Construct a sample posture information map
-        Map<String, Object> postureConfig = TaskManagerUnitTest.getPostureConfig(new int[] {this.index});
+        Map<String, Object> postureConfig = getPostureConfig(new int[] {this.index});
 
         // Get the task
         Map<String, Object> taskConfig = taskManager.getTask(postureConfig);

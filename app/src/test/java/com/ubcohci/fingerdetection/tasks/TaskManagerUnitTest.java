@@ -24,7 +24,7 @@ public abstract class TaskManagerUnitTest {
      * @param indexes The indexes of posture to add in the configuration map.
      * @return The posture configuration map.
      */
-    public static Map<String, Object> getPostureConfig(int[] indexes) {
+    public Map<String, Object> getPostureConfig(int[] indexes) {
         Map<String, Object> postureConfig = new HashMap<>();
 
         ArrayList<String> postures = new ArrayList<>();
