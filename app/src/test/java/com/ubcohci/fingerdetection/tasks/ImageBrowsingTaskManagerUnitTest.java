@@ -29,6 +29,7 @@ public class ImageBrowsingTaskManagerUnitTest extends TaskManagerUnitTest {
     @Before
     public void init() {
         taskManager =  ImageBrowsingTaskManager.getInstance();
+        taskManager.init();
     }
 
     @Override
@@ -95,9 +96,8 @@ public class ImageBrowsingTaskManagerUnitTest extends TaskManagerUnitTest {
             if (task == TaskManager.MotionTask.NONE) {
                 assertNull(index);
             } else {
-                assertEquals(startImageIndex, index);
-
                 switch (this.horizontalDirection) {
+                    // Update first (same procedure as task manager)
                     case LEFT:
                         startImageIndex--;
                         if (startImageIndex < 0) {
@@ -109,6 +109,7 @@ public class ImageBrowsingTaskManagerUnitTest extends TaskManagerUnitTest {
                         break;
                     default:
                 }
+                assertEquals(startImageIndex, index);
             }
         }
     }
