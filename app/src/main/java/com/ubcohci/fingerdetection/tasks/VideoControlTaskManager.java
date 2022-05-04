@@ -159,7 +159,7 @@ public class VideoControlTaskManager implements TaskManager {
 
     private boolean isSwitchingVideo(String posture) {
         if (version == ControlVersion.V2) {
-            return posture.equals(BaseDetector.postures[BaseDetector.maxNumOfPostures - 1])
+            return posture.equals(BaseDetector.postures[3])
                     || posture.equals(BaseDetector.postures[BaseDetector.maxNumOfPostures - 2]);
         }
         return false;
