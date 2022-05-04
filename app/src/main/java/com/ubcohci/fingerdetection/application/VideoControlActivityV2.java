@@ -151,12 +151,8 @@ public class VideoControlActivityV2 extends BaseActivity implements YouTubePlaye
         coordinates.put("left", data.getInt("x_min"));
         coordinates.put("right", data.getInt("x_max"));
 
-        Map<String, Object> postureConfig;
-        if (cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
-            postureConfig = frontPostureSeqDetector.getMotion(className, coordinates);
-        } else {
-            postureConfig = backPostureSeqDetector.getMotion(className, coordinates);
-        }
+        Map<String, Object> postureConfig = (cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)?
+                backPostureSeqDetector.getMotion(className, coordinates): frontPostureSeqDetector.getMotion(className, coordinates);
 
         // Get the motion task
         Map<String, Object> motionTask = videoControlTaskManager.getTask(postureConfig);
