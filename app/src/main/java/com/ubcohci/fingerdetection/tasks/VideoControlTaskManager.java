@@ -64,11 +64,11 @@ public class VideoControlTaskManager implements TaskManager {
 
         // all-hook-all – brightness level 90
         postureSeqToBrightness.put(
-                String.format(Locale.CANADA, "%s_%s_%s", BaseDetector.postures[4], BaseDetector.postures[2], BaseDetector.postures[4]), 90);
+                String.format(Locale.CANADA, "%s_%s_%s", BaseDetector.postures[3], BaseDetector.postures[4], BaseDetector.postures[3]), 90);
 
         // hook-all-hook – brightness level 2
         postureSeqToBrightness.put(
-                String.format(Locale.CANADA, "%s_%s_%s", BaseDetector.postures[2], BaseDetector.postures[4], BaseDetector.postures[2]), 2);
+                String.format(Locale.CANADA, "%s_%s_%s", BaseDetector.postures[4], BaseDetector.postures[3], BaseDetector.postures[4]), 2);
 
         // Last posture if V2 or V for forwards
         postureToDirection.put(version == ControlVersion.V2? BaseDetector.postures[BaseDetector.maxNumOfPostures - 1] : BaseDetector.postures[3], FORWARDS);
