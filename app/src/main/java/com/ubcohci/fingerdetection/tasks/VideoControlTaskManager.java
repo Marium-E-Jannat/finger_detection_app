@@ -64,17 +64,17 @@ public class VideoControlTaskManager implements TaskManager {
 
         // all-hook-all – brightness level 90
         postureSeqToBrightness.put(
-                String.format(Locale.CANADA, "%s_%s_%s", BaseDetector.postures[3], BaseDetector.postures[4], BaseDetector.postures[3]), 90);
+                String.format(Locale.CANADA, "%s_%s_%s", BaseDetector.postures[4], BaseDetector.postures[2], BaseDetector.postures[4]), 90);
 
         // hook-all-hook – brightness level 2
         postureSeqToBrightness.put(
-                String.format(Locale.CANADA, "%s_%s_%s", BaseDetector.postures[4], BaseDetector.postures[3], BaseDetector.postures[4]), 2);
+                String.format(Locale.CANADA, "%s_%s_%s", BaseDetector.postures[2], BaseDetector.postures[4], BaseDetector.postures[2]), 2);
 
-        // Last posture if V2 or V for forwards
-        postureToDirection.put(version == ControlVersion.V2? BaseDetector.postures[BaseDetector.maxNumOfPostures - 1] : BaseDetector.postures[3], FORWARDS);
+        // V for backwards (front camera)
+        postureToDirection.put(BaseDetector.postures[3], BACKWARDS);
 
-        // Second last posture if V2 or Hook for backwards
-        postureToDirection.put(version == ControlVersion.V2? BaseDetector.postures[BaseDetector.maxNumOfPostures - 2] : BaseDetector.postures[4], BACKWARDS);
+        // Second last posture for forwards (back camera)
+        postureToDirection.put(BaseDetector.postures[BaseDetector.maxNumOfPostures - 2], FORWARDS);
     }
 
     @Override
@@ -161,8 +161,7 @@ public class VideoControlTaskManager implements TaskManager {
         if (version == ControlVersion.V2) {
             return posture.equals(BaseDetector.postures[BaseDetector.maxNumOfPostures - 1])
                     || posture.equals(BaseDetector.postures[BaseDetector.maxNumOfPostures - 2]);
-        } else {
-            return posture.equals(BaseDetector.postures[3]) || posture.equals(BaseDetector.postures[4]);
         }
+        return false;
     }
 }
