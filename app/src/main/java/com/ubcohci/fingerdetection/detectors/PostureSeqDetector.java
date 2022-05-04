@@ -30,7 +30,7 @@ public class PostureSeqDetector implements BaseDetector, ValueEventListener {
     private int maxTolerance;
 
     // A tolerance count
-    private int toleranceCount = 1;
+    private int toleranceCount = 0;
 
     // Ref to database
     private DatabaseReference mDatabase;
