@@ -253,7 +253,7 @@ public class BaseActivity extends AppCompatActivity
         private static final String TAG = "SecondaryCameraLifeCycle";
         private final LifecycleRegistry lifeCycle;
 
-        private final static int timeOut = 1000; // 1000 ms
+        private final static int timeOut = 2000; // 1000 ms
 
         private boolean isStop = false;
 
