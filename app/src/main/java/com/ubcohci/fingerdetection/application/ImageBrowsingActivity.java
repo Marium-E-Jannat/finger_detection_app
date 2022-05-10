@@ -71,8 +71,8 @@ public class ImageBrowsingActivity extends BaseActivity {
 
         // Extract bounding box of the posture to detect gesture
         Map<String, Integer> coordinates = new HashMap<>();
-        coordinates.put("top", data.getInt("y_min"));
-        coordinates.put("bottom", data.getInt("y_max"));
+        coordinates.put("top", data.getInt("y_max"));
+        coordinates.put("bottom", data.getInt("y_min"));
         coordinates.put("left", data.getInt("x_min"));
         coordinates.put("right", data.getInt("x_max"));
 
