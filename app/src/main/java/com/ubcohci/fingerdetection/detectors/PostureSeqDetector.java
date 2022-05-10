@@ -38,9 +38,7 @@ public class PostureSeqDetector implements BaseDetector, ValueEventListener {
     /**
      * Constructor
      */
-    public PostureSeqDetector() {
-        initialize();
-    }
+    public PostureSeqDetector() {}
 
     @Override
     public void initialize() {

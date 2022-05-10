@@ -38,6 +38,7 @@ public class OpenAppActivity extends BaseActivity {
 
         // Init a gesture detector
         postureSeqDetector = new PostureSeqDetector();
+        postureSeqDetector.initialize();
 
         // Init a task manager
         openAppTaskManager = (OpenAppTaskManager) OpenAppTaskManager.getInstance();

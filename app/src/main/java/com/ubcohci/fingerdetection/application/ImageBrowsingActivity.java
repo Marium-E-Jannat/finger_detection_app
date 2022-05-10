@@ -44,6 +44,7 @@ public class ImageBrowsingActivity extends BaseActivity {
 
         // Initialize a gesture detector
         gestureDetector = new GestureDetector();
+        gestureDetector.initialize();
 
         // Add a task manager
         imageBrowsingTaskManager = ImageBrowsingTaskManager.getInstance();

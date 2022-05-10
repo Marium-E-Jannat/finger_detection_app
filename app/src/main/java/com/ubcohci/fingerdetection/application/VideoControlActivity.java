@@ -52,6 +52,7 @@ public class VideoControlActivity extends BaseActivity implements YouTubePlayer.
 
         // Init a gesture detector
         postureSeqDetector = new PostureSeqDetector();
+        postureSeqDetector.initialize();
 
         // Init a task manager
         videoControlTaskManager = (VideoControlTaskManager) VideoControlTaskManager.getInstance(VideoControlTaskManager.ControlVersion.V1);
