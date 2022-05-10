@@ -2,6 +2,8 @@ package com.ubcohci.fingerdetection.detector;
 
 import com.ubcohci.fingerdetection.detectors.BaseDetector;
 
+import java.util.Arrays;
+
 public abstract class DetectorUnitTest {
     protected BaseDetector detector;
 
@@ -28,5 +30,9 @@ public abstract class DetectorUnitTest {
             names[i++] = name;
         }
         return names;
+    }
+
+    protected boolean checkEqualArrays(String[] a1, String[] a2) {
+        return Arrays.equals(a1, a2);
     }
 }

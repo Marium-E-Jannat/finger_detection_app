@@ -87,9 +87,5 @@ public class PostureSeqDetectorUnitTest  {
                     super.postureIndexesToNames(this.expectedSequence)
             ));
         }
-
-        protected boolean checkEqualArrays(String[] a1, String[] a2) {
-            return Arrays.equals(a1, a2);
-        }
     }
 }
