@@ -30,4 +30,20 @@ public interface BaseDetector {
      * Dispose the detector.
      */
     void dispose();
+
+    /**
+     * Check if a posture is supported.
+     * @param posture The posture's class name.
+     * @return Whether a posture is supported.
+     */
+    default boolean isPostureExist(String posture) {
+        if (posture != null) {
+            for (String _posture: BaseDetector.postures) {
+                if (posture.equals(_posture)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

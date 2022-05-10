@@ -84,26 +84,10 @@ public class PostureSeqDetector implements BaseDetector, ValueEventListener {
     }
 
     /**
-     * Check if a posture is supported.
-     * @param posture The posture's class name.
-     * @return Whether a posture is supported.
-     */
-    private boolean isPostureExist(String posture) {
-        if (posture != null) {
-            for (String _posture: BaseDetector.postures) {
-                if (posture.equals(_posture)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
      * Add a posture to an internal buffer.
      * @param posture The posture's class name.
      */
-    private void addToBuffer(String posture) {
+    protected void addToBuffer(String posture) {
         // Check if the last element is the same as posture
         // If so, don't add
         if (gestureBuffer.isEmpty() || !gestureBuffer.get(gestureBuffer.size() - 1).equals(posture)) {
