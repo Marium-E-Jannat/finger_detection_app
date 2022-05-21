@@ -8,6 +8,8 @@ import android.graphics.Rect;
 import android.text.TextPaint;
 import android.util.Log;
 
+import androidx.camera.core.CameraSelector;
+
 import java.util.Locale;
 
 public class DetectionGraphic extends GraphicOverlay.Graphic {
@@ -15,9 +17,11 @@ public class DetectionGraphic extends GraphicOverlay.Graphic {
     public static class DetectionInfo {
         public String className;
         public String classId;
-        public DetectionInfo(String className, String classId) {
+        public String cameraDirection;
+        public DetectionInfo(String className, String classId, CameraSelector cameraSelector) {
             this.className = className;
             this.classId = classId;
+            this.cameraDirection = cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA? "BACK": "FRONT";
         }
     }
 

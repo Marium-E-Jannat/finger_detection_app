@@ -1,101 +1,65 @@
 package com.ubcohci.fingerdetection.camera;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
-import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LifecycleOwner;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import com.ubcohci.fingerdetection.MainActivity;
+import com.ubcohci.fingerdetection.MainActivityV2;
 
-public class CameraSource {
-    // TAGs
-    private final String TAG;
-
-    // Camera settings
-    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
-
-    // Owner
-    private final Context context;
-    private final AnalyzerListener imageHandler;
+public interface CameraSource {
+    /**
+     * Start the camera.
+     */
+    void startCamera();
 
     /**
-     * Constructor
-     * @param tag TAG of the owner.
-     * @param context The owner (must be instance of LifecycleOwner)
+     * Close the camera and release held resources.
      */
-    public CameraSource(String tag, Context context, AnalyzerListener imageHandler) {
-        this.TAG = "CameraSource_" + tag;
-        this.context = context;
-        this.imageHandler = imageHandler;
-    }
+    void releaseCamera();
 
     /**
-     * Start camera.
-     * Currently only supports MainActivity.
+     * Get SurfaceProvider from activity view binding.
+     * @param context The owner of the current camera source instance.
+     * @return An array of SurfaceProviders, where first element is front camera and second is back camera (if any).
      */
-    public void startCamera() {
-        cameraProviderFuture = ProcessCameraProvider.getInstance(this.context);
-        cameraProviderFuture.addListener(
-                () -> {
-                    try {
-                        ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+   default Preview.SurfaceProvider[] getSurfaceProvider(@NonNull Context context) {
+        Preview.SurfaceProvider[] surfaceProvider = null;
+        if (context instanceof MainActivity) {
+            surfaceProvider = new Preview.SurfaceProvider[] {
+                    ((MainActivity) context).viewBinding.viewFinder.getSurfaceProvider()
+            };
+        } else if (context instanceof MainActivityV2) {
+            surfaceProvider = new Preview.SurfaceProvider[] {
+                    ((MainActivityV2) context).viewBinding.viewFinderFront.getSurfaceProvider(),
+                    ((MainActivityV2) context).viewBinding.viewFinderBack.getSurfaceProvider()
+            };
+        }
+        return surfaceProvider;
+   }
 
-                        // Preview
-                        Preview preview = new Preview.Builder().build();
-                        preview.setSurfaceProvider(((MainActivity) context).viewBinding.viewFinder.getSurfaceProvider());
-
-                        // Camera selector
-                        CameraSelector selector = CameraSelector.DEFAULT_FRONT_CAMERA;
-
-                        // Analyser
-                        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder().build();
-                        imageAnalysis.setAnalyzer(
-                                ContextCompat.getMainExecutor(this.context),
-                                new Analyzer(imageHandler)
-                        );
-
-                        // Unbind use cases before rebinding
-                        cameraProvider.unbindAll();
-
-                        // Bind use cases
-                        cameraProvider.bindToLifecycle(
-                                (LifecycleOwner) this.context,
-                                selector,
-                                preview,
-                                imageAnalysis
-                        );
-                    } catch (Exception e) {
-                        Log.e(TAG, e.getMessage());
-                    }
-                },
-                ActivityCompat.getMainExecutor(this.context) // Running on the main thread
-        );
-    }
-
-    public interface AnalyzerListener {
-        void handle(@NonNull ImageProxy image);
-    }
 
     /**
      * Analyzer to receive image frames.
      */
-    private static final class Analyzer implements ImageAnalysis.Analyzer {
+    final class Analyzer implements ImageAnalysis.Analyzer {
         private final AnalyzerListener listener;
-        public Analyzer(AnalyzerListener listener) {
+        private final CameraSelector cameraSelector;
+        public Analyzer(@NonNull AnalyzerListener listener, @NonNull CameraSelector cameraSelector) {
             this.listener = listener;
+            this.cameraSelector = cameraSelector;
         }
         @Override
         public void analyze(@NonNull ImageProxy image) {
-            listener.handle(image); // Run on current thread (i.e. main thread)
+            listener.handle(image, cameraSelector); // Run a separate thread pool (cameraExecutor)
         }
+    }
+
+    interface AnalyzerListener {
+        void handle(@NonNull ImageProxy image, @NonNull CameraSelector cameraSelector);
     }
 }

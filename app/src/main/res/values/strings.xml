@@ -5,4 +5,9 @@
     <string name="stop_capture">Stop Capture</string>
     <string name="start">Start</string>
     <string name="main_icon">Main Icon</string>
+    <string name="app_selection">App Selection:</string>
+    <string name="app_choices">App choices</string>
+    <string name="show_debug">Show Debug:</string>
+    <string name="tell_me_to_switch_app">Tell me to switch app!</string>
+    <string name="current_browsed_image">Current Browsed Image</string>
 </resources>

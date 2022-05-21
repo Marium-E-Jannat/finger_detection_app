@@ -58,7 +58,7 @@ public class DrawingUtils {
 
         // Define rectangle size
         float rectWidth = width / 2f;
-        float rectHeight = (textPaint.getTextSize() + padding) * 2 + padding;
+        float rectHeight = (textPaint.getTextSize() + padding) * 3 + padding;
 
 
         // Draw background
@@ -87,6 +87,22 @@ public class DrawingUtils {
                 padding + textPaint.getTextSize(),
                 textPaint
         );
+        canvas.translate(0, padding + textPaint.getTextSize());
+
+        // Draw camera selector
+        canvas.drawText(
+                String.format(Locale.CANADA, "Camera: %s", info.cameraDirection),
+                width - rectWidth -  margin + padding,
+                padding + textPaint.getTextSize(),
+                textPaint
+        );
+
         canvas.restore();
+
+
+    }
+
+    public static void drawInferenceResult(@NonNull Canvas canvas, @NonNull InferenceGraphic.Inference inference) {
+        
     }
 }
