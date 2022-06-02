@@ -51,24 +51,30 @@ public class VideoControlTaskManager implements TaskManager {
         this.version = version;
 
         // Get max audio value
+        // WARNING: This value might be changed at runtime depends on the system settings
         int maxVolume = TaskResource.maxVolume;
 
-        // Straight index finger to set the sound at 10%
+        // Straight index finger -> sound at 10%
         postureToVolume.put(BaseDetector.postures[0], maxVolume / 10);
 
-        // Straight two fingers to set the sound at 50%
+        // Straight two fingers -> sound at 50%
         postureToVolume.put(BaseDetector.postures[1], maxVolume / 2);
 
-        // Straight all fingers to set the sound at 100%
+        // Straight all fingers -> sound at 100%
         postureToVolume.put(BaseDetector.postures[2], maxVolume);
 
-        // all-hook-all – brightness level 90
+        // hook-all –> brightness level 100
         postureSeqToBrightness.put(
-                String.format(Locale.CANADA, "%s_%s_%s", BaseDetector.postures[4], BaseDetector.postures[2], BaseDetector.postures[4]), 90);
+                String.format(Locale.CANADA, "%s_%s", BaseDetector.postures[4], BaseDetector.postures[2]), 100);
 
-        // hook-all-hook – brightness level 2
+        // hook-two –> brightness level 60
         postureSeqToBrightness.put(
-                String.format(Locale.CANADA, "%s_%s_%s", BaseDetector.postures[2], BaseDetector.postures[4], BaseDetector.postures[2]), 2);
+                String.format(Locale.CANADA, "%s_%s", BaseDetector.postures[4], BaseDetector.postures[1]), 60);
+
+        // hook-one –> brightness level 30
+        postureSeqToBrightness.put(
+                String.format(Locale.CANADA, "%s_%s", BaseDetector.postures[4], BaseDetector.postures[0]), 30);
+
 
         // V for backwards (front camera)
         postureToDirection.put(BaseDetector.postures[3], BACKWARDS);
