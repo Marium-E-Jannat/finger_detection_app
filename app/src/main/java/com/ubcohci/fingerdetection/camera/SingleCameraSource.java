@@ -23,6 +23,8 @@ public class SingleCameraSource implements CameraSource{
     private final Context context;
     private final AnalyzerListener imageHandler;
 
+    private final CameraSelector cameraSelector;
+
     /**
      * Constructor
      * @param tag TAG of the owner.
@@ -32,6 +34,14 @@ public class SingleCameraSource implements CameraSource{
         this.TAG = "SingleCameraSource_" + tag;
         this.context = context;
         this.imageHandler = imageHandler;
+        this.cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA;
+    }
+
+    public SingleCameraSource(CameraSelector cameraSelector, String tag, Context context, AnalyzerListener imageHandler) {
+        this.TAG = "SingleCameraSource_" + tag;
+        this.context = context;
+        this.imageHandler = imageHandler;
+        this.cameraSelector = cameraSelector;
     }
 
     /**
@@ -55,7 +65,7 @@ public class SingleCameraSource implements CameraSource{
                         }
 
                         // Camera selector
-                        CameraSelector selector = CameraSelector.DEFAULT_FRONT_CAMERA;
+                        CameraSelector selector = this.cameraSelector;
 
                         // Analyser
                         ImageAnalysis imageAnalysis = new ImageAnalysis.Builder().build();

@@ -2,8 +2,10 @@ package com.ubcohci.fingerdetection.application;
 
 import android.os.Bundle;
 
+import androidx.camera.core.CameraSelector;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.ubcohci.fingerdetection.camera.SingleCameraSource;
 import com.ubcohci.fingerdetection.databinding.ActivityMockMapScrollingBinding;
 import com.ubcohci.fingerdetection.detectors.GestureDetector;
 import com.ubcohci.fingerdetection.tasks.MockMapScrollTaskManager;
@@ -47,6 +49,13 @@ public class MockMapScrollingActivity extends BaseActivity {
         taskManager = (MockMapScrollTaskManager) MockMapScrollTaskManager.getInstance();
         taskManager.init();
 
+        // Override default SingleCameraSource
+        this.singleCameraSource = new SingleCameraSource(
+                CameraSelector.DEFAULT_BACK_CAMERA,
+                TAG,
+                this,
+                this
+        );
         if (permissionManager.isAllPermissionsGranted()) {
             singleCameraSource.startCamera();
         } else {
