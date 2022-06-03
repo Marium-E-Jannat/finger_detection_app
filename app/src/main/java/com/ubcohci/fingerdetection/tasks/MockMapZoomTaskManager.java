@@ -10,7 +10,7 @@ public class MockMapZoomTaskManager implements TaskManager {
 
     private static MockMapZoomTaskManager _instance;
 
-    public static MockMapZoomTaskManager getInstance() {
+    public static TaskManager getInstance() {
         if (_instance == null) {
             _instance = new MockMapZoomTaskManager();
         }
