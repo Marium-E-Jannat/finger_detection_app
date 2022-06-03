@@ -52,7 +52,7 @@ public class ImageBrowsingActivity extends BaseActivity {
 
         // Set pager
         imagePager = viewBinding.imagePager;
-        FragmentStateAdapter pageAdapter = new ImageSlidePagerAdapter(this, TaskResource.imageURLs);
+        FragmentStateAdapter pageAdapter = new ImageSlidePageFragment.ImageSlidePagerAdapter(this, TaskResource.imageURLs);
         imagePager.setAdapter(pageAdapter);
 
         if (permissionManager.isAllPermissionsGranted()) {
@@ -98,29 +98,5 @@ public class ImageBrowsingActivity extends BaseActivity {
      */
     public void slidePager(int index) {
         imagePager.setCurrentItem(index);
-    }
-
-    /**
-     * A simple pager adapter that represents imageURLs.length ImageSlidePageFragment objects, in
-     * sequence.
-     */
-    private static class ImageSlidePagerAdapter extends FragmentStateAdapter {
-        public final String[] imageURLs;
-
-        public ImageSlidePagerAdapter(FragmentActivity fa, @NonNull String[] imageURLs) {
-            super(fa);
-            this.imageURLs = imageURLs;
-        }
-
-        @NonNull
-        @Override
-        public Fragment createFragment(int position) {
-            return new ImageSlidePageFragment(this.imageURLs[position]);
-        }
-
-        @Override
-        public int getItemCount() {
-            return this.imageURLs.length;
-        }
     }
 }

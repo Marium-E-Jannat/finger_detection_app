@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.bumptech.glide.Glide;
 import com.ubcohci.fingerdetection.R;
@@ -35,5 +37,29 @@ public class ImageSlidePageFragment extends Fragment {
                 .placeholder(R.drawable.image_place_holder)
                 .into((ImageView) view.findViewById(R.id.browsedImage));
         return view;
+    }
+
+    /**
+     * A simple pager adapter that represents imageURLs.length ImageSlidePageFragment objects, in
+     * sequence.
+     */
+    public static class ImageSlidePagerAdapter extends FragmentStateAdapter {
+        public final String[] imageURLs;
+
+        public ImageSlidePagerAdapter(FragmentActivity fa, @NonNull String[] imageURLs) {
+            super(fa);
+            this.imageURLs = imageURLs;
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return new ImageSlidePageFragment(this.imageURLs[position]);
+        }
+
+        @Override
+        public int getItemCount() {
+            return this.imageURLs.length;
+        }
     }
 }
