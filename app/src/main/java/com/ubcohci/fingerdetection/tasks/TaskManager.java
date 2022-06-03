@@ -12,6 +12,8 @@ public interface TaskManager {
         SWITCH_VIDEO_FRAME,
         OPEN_APP,
         SLIDE_PAGE,
+        ZOOM_IN,
+        ZOOM_OUT,
         NONE
     }
 
