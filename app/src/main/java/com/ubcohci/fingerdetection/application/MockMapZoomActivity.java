@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import com.ubcohci.fingerdetection.databinding.ActivityMockMapZoomBinding;
 import com.ubcohci.fingerdetection.detectors.PostureSeqDetector;
 import com.ubcohci.fingerdetection.tasks.MockMapZoomTaskManager;
+import com.ubcohci.fingerdetection.tasks.TaskExecutor;
 import com.ubcohci.fingerdetection.tasks.TaskManager;
 
 import org.json.JSONException;
@@ -39,6 +40,9 @@ public class MockMapZoomActivity extends  BaseActivity {
         taskManager = (MockMapZoomTaskManager) MockMapZoomTaskManager.getInstance();
         taskManager.init();
 
+        // Load the image
+        TaskExecutor.loadImage(this, mockMap);
+
         if (permissionManager.isAllPermissionsGranted()) {
             singleCameraSource.startCamera();
         } else {
@@ -70,10 +74,11 @@ public class MockMapZoomActivity extends  BaseActivity {
         final TaskManager.MotionTask task = (TaskManager.MotionTask) Objects.requireNonNull(taskConfig.get("task"));
 
         switch(task) {
-            case ZOOM_IN: // TODO: Zoom in
+            case ZOOM_IN:
+                TaskExecutor.zoomImage(mockMap, TaskExecutor.ZOOM_IN);
                 break;
-            case ZOOM_OUT: // TODO:
-                break;
+            case ZOOM_OUT:
+                TaskExecutor.zoomImage(mockMap, TaskExecutor.ZOOM_OUT);
             default:
         }
     }

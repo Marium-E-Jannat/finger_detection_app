@@ -1,19 +1,31 @@
 package com.ubcohci.fingerdetection.tasks;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.media.AudioManager;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.camera.view.PreviewView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.youtube.player.YouTubePlayer;
+import com.ubcohci.fingerdetection.R;
+
+import java.net.URI;
 
 public class TaskExecutor {
     private static final String TAG = "TaskExecutor";
+    public static final int ZOOM_IN = 0;
+    public static final int ZOOM_OUT = 1;
 
     public static void switchVolume(Activity context, int volumeLevel) {
         Log.d(TAG, "Setting volume to " + volumeLevel);
@@ -50,5 +62,33 @@ public class TaskExecutor {
 
     public static void advanceVideoFrame(@NonNull YouTubePlayer player, boolean forward) {
         player.seekRelativeMillis(forward? 2000: -2000);
+    }
+
+    /**
+     *
+     * @param context The current app context
+     * @param imageView The image view to host the image
+     */
+    public static void loadImage(@NonNull Context context, @NonNull ImageView imageView) {
+        Glide.with(context)
+                .load(TaskResource.mockMapImageURL)
+                .placeholder(R.drawable.image_place_holder)
+                .into(imageView);
+    }
+
+    /**
+     *
+     * @param imageView The image view to host the image
+     * @param zoomDirection The zoom direction (0 -> ZOOM_IN, 1 -> ZOOM_OUT)
+     *
+     */
+    public static void zoomImage(@NonNull ImageView imageView, int zoomDirection) {
+        switch (zoomDirection) {
+            case ZOOM_IN:
+                break; // TODO: Implement zoom in and zoom out for the image view
+            case ZOOM_OUT:
+                break;
+            default: throw new UnsupportedOperationException();
+        }
     }
 }
