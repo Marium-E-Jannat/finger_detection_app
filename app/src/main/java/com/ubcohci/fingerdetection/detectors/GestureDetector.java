@@ -93,7 +93,7 @@ public class GestureDetector implements BaseDetector, ValueEventListener {
 
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
-        pixelThreshold = (Integer) Objects.requireNonNull(snapshot.getValue());
+        pixelThreshold = ((Long) Objects.requireNonNull(snapshot.getValue())).intValue();
     }
 
     @Override
