@@ -3,13 +3,16 @@ package com.ubcohci.fingerdetection.application;
 import android.os.Bundle;
 
 import androidx.camera.core.CameraSelector;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.ubcohci.fingerdetection.camera.SingleCameraSource;
 import com.ubcohci.fingerdetection.databinding.ActivityMockMapScrollingBinding;
 import com.ubcohci.fingerdetection.detectors.GestureDetector;
+import com.ubcohci.fingerdetection.fragments.ImageSlidePageFragment;
 import com.ubcohci.fingerdetection.tasks.MockMapScrollTaskManager;
 import com.ubcohci.fingerdetection.tasks.TaskManager;
+import com.ubcohci.fingerdetection.tasks.TaskResource;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +45,8 @@ public class MockMapScrollingActivity extends BaseActivity {
 
         this.graphicOverlay = viewBinding.mockMapOverlay;
         this.imagePager = viewBinding.imageViewPager;
+        FragmentStateAdapter pageAdapter = new ImageSlidePageFragment.ImageSlidePagerAdapter(this, TaskResource.imageURLs);
+        imagePager.setAdapter(pageAdapter);
 
         gestureDetector = new GestureDetector();
         gestureDetector.initialize();
