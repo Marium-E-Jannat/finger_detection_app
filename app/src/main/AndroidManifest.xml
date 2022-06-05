@@ -42,6 +42,8 @@
             android:hardwareAccelerated="true"
             android:name=".application.VideoControlActivityV2">
         </activity>
+        <activity android:name=".application.MockMapZoomActivity" />
+        <activity android:name=".application.MockMapScrollingActivity" />
         <activity
             android:name=".LaunchActivity"
             android:exported="true">

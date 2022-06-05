@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ubcohci.fingerdetection.application.ImageBrowsingActivity;
+import com.ubcohci.fingerdetection.application.MockMapScrollingActivity;
+import com.ubcohci.fingerdetection.application.MockMapZoomActivity;
 import com.ubcohci.fingerdetection.application.OpenAppActivity;
 import com.ubcohci.fingerdetection.application.VideoControlActivity;
 import com.ubcohci.fingerdetection.application.VideoControlActivityV2;
@@ -35,6 +37,8 @@ public class LaunchActivity extends AppCompatActivity
         appNameToClass.put("Video Control V2", VideoControlActivityV2.class);
         appNameToClass.put("Detection Preview", MainActivity.class);
         appNameToClass.put("Detection Preview V2", MainActivityV2.class);
+        appNameToClass.put("Map Scrolling", MockMapScrollingActivity.class);
+        appNameToClass.put("Map Zooming", MockMapZoomActivity.class);
     }
 
     private String selectedAppName;
