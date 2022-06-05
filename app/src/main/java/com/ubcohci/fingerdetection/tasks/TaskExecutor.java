@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -77,18 +79,14 @@ public class TaskExecutor {
     }
 
     /**
-     *
+     * @param
      * @param imageView The image view to host the image
      * @param zoomDirection The zoom direction (0 -> ZOOM_IN, 1 -> ZOOM_OUT)
      *
      */
-    public static void zoomImage(@NonNull ImageView imageView, int zoomDirection) {
-        switch (zoomDirection) {
-            case ZOOM_IN:
-                break; // TODO: Implement zoom in and zoom out for the image view
-            case ZOOM_OUT:
-                break;
-            default: throw new UnsupportedOperationException();
-        }
+    public static void zoomImage(Context context, @NonNull ImageView imageView, int zoomDirection) {
+        Animation animationZoom = AnimationUtils.loadAnimation(context,
+                zoomDirection == ZOOM_IN? R.anim.zoom_in: R.anim.zoom_out);
+        imageView.startAnimation(animationZoom);
     }
 }

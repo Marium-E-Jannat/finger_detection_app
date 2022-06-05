@@ -73,13 +73,9 @@ public class MockMapZoomActivity extends  BaseActivity {
 
         final TaskManager.MotionTask task = (TaskManager.MotionTask) Objects.requireNonNull(taskConfig.get("task"));
 
-        switch(task) {
-            case ZOOM_IN:
-                TaskExecutor.zoomImage(mockMap, TaskExecutor.ZOOM_IN);
-                break;
-            case ZOOM_OUT:
-                TaskExecutor.zoomImage(mockMap, TaskExecutor.ZOOM_OUT);
-            default:
-        }
+        TaskExecutor.zoomImage(
+                this,
+                mockMap,
+                task == TaskManager.MotionTask.ZOOM_IN? TaskExecutor.ZOOM_IN: TaskExecutor.ZOOM_OUT);
     }
 }
